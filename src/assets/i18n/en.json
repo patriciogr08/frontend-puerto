@@ -1,0 +1,40 @@
+{
+    "manager": {
+        "tenant": "Tenant",
+        "tenants": "Tenants",
+        "company": "Company",
+        "companies": "Companies",
+        "user": "User",
+        "users": "Users"
+    },
+    "maintainers": {
+        "client": "Client",
+        "clients": "Clients"
+    },
+    "processes": {
+        "uploadFile": "Upload Document",
+        "manageTurns": "Manage Turns"
+    },
+    "navigation": {
+        "manager": "Manager",
+        "companies": "Companies",
+        "tenants": "Tenants",
+        "domains": "Domains"
+    },
+    "actions": {
+        "add": "Add",
+        "save": "Save",
+        "cancel": "Cancel",
+        "search": "Search",
+        "searchOrder": "Search Order",
+        "searchClient": "Search Client"
+    },
+    "forms": {
+        "code": "Code",
+        "name": "Name",
+        "year": "Year",
+        "names": "Names",
+        "surnames": "Surnames",
+        "identification": "Identification"
+    }
+}

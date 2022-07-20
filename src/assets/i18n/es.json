@@ -1,0 +1,41 @@
+{
+    "manager": {
+        "tenant": "Inquilino",
+        "tenants": "Inquilinos",
+        "company": "Compañia",
+        "companies": "Compañias",
+        "user": "Usuario",
+        "users": "Usuarios",
+        "uploadDocuments": "Subir Documentos"
+    },
+    "maintainers": {
+        "client": "Cliente",
+        "clients": "Clientes"
+    },
+    "processes": {
+        "uploadFile": "Subir Documento",
+        "manageTurns": "Administrar Turnos"
+    },
+    "navigation": {
+        "manager": "Administrador",
+        "companies": "Compañias",
+        "tenants": "Inquilinos",
+        "domains": "Dominios"
+    },
+    "actions": {
+        "add": "Nuevo",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "search": "Buscar",
+        "searchOrder": "Buscar Orden",
+        "searchClient": "Buscar Cliente"
+    },
+    "forms": {
+        "code": "Codigo",
+        "name": "Nombre",
+        "year": "Año",
+        "names": "Nombres",
+        "surnames": "Apellidos",
+        "identification": "Identificación"
+    }
+}

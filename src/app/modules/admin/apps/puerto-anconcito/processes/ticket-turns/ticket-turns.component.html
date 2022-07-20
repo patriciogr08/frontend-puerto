@@ -1,0 +1,190 @@
+<div *transloco="let t" class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <div
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between px-4 py-2 sm:py-2 sm:px-4 border-b bg-card dark:bg-transparent">
+        <!-- Loader -->
+        <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <!-- <div>
+                <div class="hidden sm:flex flex-wrap items-center font-medium">
+                    <div>
+                        <a class="whitespace-nowrap text-primary-500">Projects</a>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <a class="ml-1 text-primary-500">Weekend Project</a>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <span class="ml-1 text-secondary">Overview</span>
+                    </div>
+                </div>
+                <div class="flex sm:hidden">
+                    <a class="inline-flex items-center -ml-1.5 text-secondary font-medium" [routerLink]="'./..'">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-left'">
+                        </mat-icon>
+                        <span class="ml-1">Back</span>
+                    </a>
+                </div>
+            </div> -->
+            <!-- Title -->
+            <div class="mt-1">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    {{ t('processes.manageTurns') }}
+                </h2>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex flex-shrink-0 justify-end items-center mt-4 sm:mt-0 sm:ml-4">
+            <!-- Search -->
+            <!-- <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"> -->
+                <!-- <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon> -->
+                <!-- <input matInput [formControl]="searchInputControl" [autocomplete]="'on'"
+                    [placeholder]="t('actions.searchClient')">
+                <button mat-icon-button (click)="searchOrder()">
+                    <mat-icon [svgIcon]="'heroicons_solid:search'" color="primary"></mat-icon>
+                </button>
+            </mat-form-field> -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
+                <!-- <mat-label>{{ t("manager.company") }}</mat-label> -->
+                <mat-select [formControl]="clientSelected" placeholder="Buscar Cliente" #singleSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="clientFilterCtrl"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let client of filteredClient | async" [value]="client">
+                        {{ client.nombres }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="getTurns()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+            <button mat-flat-button [color]="'primary'" (click)="openDialogUploadFile()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">{{ t('actions.add') }}</span>
+            </button>
+        </div>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="custom-accordion" [expanded]="isPanelOpen" (closed)="isPanelOpen = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="font-bold">
+                    Información del Cliente:
+                </mat-panel-title>
+                <mat-panel-description>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class='flex flex-auto justify-around flex-col sm:flex-row' [formGroup]="clientForm">
+                <!-- <mat-form-field appearance="standard">
+                    <mat-label>Orden</mat-label>
+                    <input matInput placeholder="Order" readonly formControlName="order">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="Order" readonly formControlName="procedure">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Orden</mat-label>
+                    <input matInput placeholder="Order" readonly formControlName="client">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field> -->
+                <!-- <mat-form-field appearance="standard">
+                    <mat-label>Orden</mat-label>
+                    <input matInput placeholder="Order" readonly formControlName="request">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                </mat-form-field> -->
+                <div class="inline-block">
+                    <div class="flex flex-auto flex-col w-3/4">
+                        <mat-label class="font-bold">{{ t('forms.names') }}</mat-label>
+                        <input class="border-b-2" type="text" readonly formControlName="nombres">
+                    </div>
+                </div>
+                <div class="inline-block">
+                    <div class="flex flex-auto flex-col w-3/4">
+                        <mat-label class="font-bold">{{ t('forms.surnames') }}</mat-label>
+                        <input class="border-b-2" type="text" readonly formControlName="apellidos">
+                    </div>
+                </div>
+                <div class="inline-block">
+                    <div class="flex flex-auto flex-col w-3/4">
+                        <mat-label class="font-bold">{{ t('forms.identification') }}</mat-label>
+                        <input class="border-b-2" type="text" readonly formControlName="identificacion">
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-y-auto" cdkScrollable>
+
+        <!-- CONTENT GOES HERE -->
+        <div class="flex flex-col flex-auto sm:overflow-y-auto p-2 sm:p-4">
+            <!-- <ag-grid-angular style="width: auto; height: 100%;" [class]="gridTheme" [rowData]="turns"
+                [columnDefs]="turnsCols" [components]="renderComponents"
+                (gridReady)="onGridReadyTurns($event)">
+            </ag-grid-angular> -->
+            <mat-card>
+                <mat-card-title>Registrar Vehiculo</mat-card-title>
+                <!-- <mat-card-subtitle>Start</mat-card-subtitle> -->
+                <mat-card-content>
+                    <div mat-dialog-content class="flex flex-col" [formGroup]="turnForm">
+                        <mat-form-field>
+                            <mat-label>Placa</mat-label>
+                            <input matInput type="text" [maxlength]="minLengthCode" formControlName="placaVehiculo">
+                            <mat-error *ngIf="clientForm.invalid">ERROR</mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Tipo de Vehiculo</mat-label>
+                            <mat-select formControlName="idTipoVehiculo" placeholder="Seleccione..." #singleSelect>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="typeVehicleFilterCtrl"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let typeVehicle of filteredTypeVehicle | async" [value]="typeVehicle.id">
+                                    {{ typeVehicle.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Valor</mat-label>
+                            <input matInput type="text" readonly [maxlength]="minLengthCode" formControlName="valor">
+                            <mat-error *ngIf="clientForm.invalid">ERROR</mat-error>
+                        </mat-form-field>
+                        <!-- <mat-form-field>
+                            <mat-label>{{ t('forms.surnames') }}</mat-label>
+                            <input matInput formControlName="apellidos">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>{{ t('forms.identification') }}</mat-label>
+                            <input matInput formControlName="identificacion">
+                        </mat-form-field> -->
+                    </div>
+                </mat-card-content>
+                <mat-card-actions class="text-right">
+                    <button mat-raised-button class="min-w-26" [mat-dialog-close]="false" [disabled]="isLoading"
+                        color="warn">{{ t('actions.cancel') }}</button>
+                    <button mat-raised-button class="min-w-26" [disabled]="isLoading || clientForm.invalid"
+                        color="primary" (click)="save()">
+                        <ng-container *ngIf="isLoading; else elseTemplate">
+                            <mat-spinner [diameter]="25"></mat-spinner>
+                        </ng-container>
+                        <ng-template #elseTemplate>
+                            {{ t('actions.save') }}
+                        </ng-template>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
+    </div>
+
+</div>

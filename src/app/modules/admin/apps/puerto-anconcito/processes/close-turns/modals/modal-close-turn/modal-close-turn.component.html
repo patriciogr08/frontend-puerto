@@ -1,0 +1,22 @@
+<ng-container *transloco="let t">
+    <h2 mat-dialog-title>Cerrar Turno</h2>
+    <div mat-dialog-content class="flex flex-col" [formGroup]="closeTurnForm">
+        <mat-form-field>
+            <mat-label>Observación</mat-label>
+            <input matInput type="text" [maxlength]="minLengthCode" formControlName="observacionCierre">
+            <mat-error *ngIf="closeTurnForm.invalid">ERROR</mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions class="justify-end">
+        <button mat-raised-button class="min-w-26" [mat-dialog-close]="false" [disabled]="isLoading"
+            color="warn">{{ t('actions.cancel') }}</button>
+        <button mat-raised-button class="min-w-26" [disabled]="isLoading || closeTurnForm.invalid" color="primary" (click)="save()">
+            <ng-container *ngIf="isLoading; else elseTemplate">
+                <mat-spinner [diameter]="25"></mat-spinner>
+            </ng-container>
+            <ng-template #elseTemplate>
+                {{ t('actions.save') }}
+            </ng-template>
+        </button>
+    </div>
+</ng-container>
