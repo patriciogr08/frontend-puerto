@@ -184,7 +184,11 @@ export class TicketTurnsComponent implements OnInit {
     console.log(this.turnForm.value);
     this.restangular.all('cobroGarita').post(this.turnForm.value).subscribe((res: IResponse) => {
       // this.modalAlertService.openAlert(res.message.type, res.message.body, false);
-      console.log(res);
+      if (res) {
+        alert('TURNO GUARDADO');
+        this.clientForm.reset();
+        this.turnForm.reset();
+      }
     })
   }
 

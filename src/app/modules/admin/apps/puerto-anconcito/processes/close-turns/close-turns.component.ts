@@ -172,6 +172,8 @@ export class CloseTurnsComponent implements OnInit {
     this.restangular.one('correo').all('sendinblue').post(params).subscribe((res: IResponse) => {
       if (res) {
         alert('TURNO CERRADO Y CORREO ENVIADO');
+        this.values = [];
+        this.totalRecaudado = 0;
       }
       // this.modalAlertService.openAlert(res.message.type, res.message.body, false);
     })
