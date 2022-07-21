@@ -192,30 +192,6 @@ export class TicketTurnsComponent implements OnInit {
     })
   }
 
-  searchOrder() {
-    this.isLoading = true;
-    const params = {
-      order: this.searchInputControl.value
-    }
-    this.restangular.all('').customGET('order-dobra', params).subscribe((res) => {
-      if (res.data.client) {
-        // this.isLoading = false;
-        this.client = res.data.client;
-        this.clientForm.patchValue({
-          order: this.client.OrdenCIA,
-          procedure: this.client.Orden,
-          client: this.client.client.Nombre,
-          request: this.client.NoPedido
-        })
-        this.isPanelOpen = true;
-        this.getTurns(this.client.OrdenCIA);
-      } else {
-        this.isLoading = false;
-      }
-
-    });
-  }
-
   searchFieldSubscriptions() {
     this.typeVehicleCtrl.valueChanges.pipe(takeUntil(this._unsubscribeAll)).subscribe(() => {
       this.filterClients();
