@@ -163,7 +163,7 @@ export class CloseTurnsComponent implements OnInit {
       "params": {
         "titulo": "Cierre turno de cobros de garita",
         "usuario": this.user.primerNombre + ' ' + this.user.primerApellido,
-        "fechaFin": "2022-07-20",
+        "fechaFin": data.fechaFin,
         "valorRecaudado": data.valorRecaudado,
         "observacionCierre": data.observacionCierre,
         "nota": "Agradecemos la atención prestada a esta notificación"
