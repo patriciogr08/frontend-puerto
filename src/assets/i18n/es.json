@@ -8,13 +8,9 @@
         "users": "Usuarios",
         "uploadDocuments": "Subir Documentos"
     },
-    "maintainers": {
-        "client": "Cliente",
-        "clients": "Clientes"
-    },
+    "maintainers": {},
     "processes": {
-        "uploadFile": "Subir Documento",
-        "manageTurns": "Administrar Turnos"
+        "uploadFile": "Subir Documento"
     },
     "navigation": {
         "manager": "Administrador",
@@ -27,15 +23,14 @@
         "save": "Guardar",
         "cancel": "Cancelar",
         "search": "Buscar",
-        "searchOrder": "Buscar Orden",
-        "searchClient": "Buscar Cliente"
+        "searchOrder": "Buscar Orden"
     },
     "forms": {
         "code": "Codigo",
         "name": "Nombre",
-        "year": "Año",
-        "names": "Nombres",
-        "surnames": "Apellidos",
-        "identification": "Identificación"
+        "year": "Año"
+    },
+    "defaultTexts": {
+        "alertMessage": "Este es un texto de prueba para las Alertas"
     }
 }

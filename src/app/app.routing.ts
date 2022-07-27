@@ -77,11 +77,7 @@ export const appRoutes: Route[] = [
             {path: 'example', children: [
                 {path: 'manager', loadChildren: () => import('app/modules/admin/apps/example/manager/manager.module').then(m => m.ManagerModule)},
                 {path: 'maintainers', loadChildren: () => import('app/modules/admin/apps/example/maintainers/maintainers.module').then(m => m.MaintainersModule)},
-            ]},
-            {path: 'puerto-anconcito', children: [
-                // {path: 'manager', loadChildren: () => import('app/modules/admin/apps/puerto-anconcito/manager/manager.module').then(m => m.ManagerModule)},
-                {path: 'maintainers', loadChildren: () => import('app/modules/admin/apps/puerto-anconcito/maintainers/maintainers.module').then(m => m.MaintainersModule)},
-                {path: 'processes', loadChildren: () => import('app/modules/admin/apps/puerto-anconcito/processes/processes.module').then(m => m.ProcessesModule)},
+                {path: 'components', loadChildren: () => import('app/modules/admin/apps/example/components/components.module').then(m => m.ComponentsModule)},
             ]},
         ]
     }

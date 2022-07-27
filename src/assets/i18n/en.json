@@ -7,13 +7,9 @@
         "user": "User",
         "users": "Users"
     },
-    "maintainers": {
-        "client": "Client",
-        "clients": "Clients"
-    },
+    "maintainers": {},
     "processes": {
-        "uploadFile": "Upload Document",
-        "manageTurns": "Manage Turns"
+        "uploadFile": "Upload Document"
     },
     "navigation": {
         "manager": "Manager",
@@ -24,17 +20,14 @@
     "actions": {
         "add": "Add",
         "save": "Save",
-        "cancel": "Cancel",
-        "search": "Search",
-        "searchOrder": "Search Order",
-        "searchClient": "Search Client"
+        "cancel": "Cancel"
     },
     "forms": {
         "code": "Code",
         "name": "Name",
-        "year": "Year",
-        "names": "Names",
-        "surnames": "Surnames",
-        "identification": "Identification"
+        "year": "Year"
+    },
+    "defaultTexts": {
+        "alertMessage": "This is a test text for the Alerts"
     }
 }

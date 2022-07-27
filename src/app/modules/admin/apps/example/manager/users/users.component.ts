@@ -96,6 +96,7 @@ export class UsersComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalAddUserComponent);
 
     dialogRef.afterClosed().subscribe(res => {
+      console.log(res);
       if (res) {
         this.gridApiUsers.applyTransaction({
           add: [res.row],

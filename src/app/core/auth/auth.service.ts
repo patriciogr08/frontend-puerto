@@ -4,8 +4,6 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { environment } from 'environments/environment';
-import { User } from '../user/user.types';
 
 @Injectable()
 export class AuthService
@@ -39,20 +37,6 @@ export class AuthService
         return localStorage.getItem('accessToken') ?? '';
     }
 
-     /**
-     * Setter & getter for user
-     */
-      set user(user: User)
-      {
-          const fixUser = {...user, name: user.primerNombre}
-          localStorage.setItem('user', JSON.stringify(fixUser));
-      }
-  
-      get user(): User
-      {
-          return JSON.parse(localStorage.getItem('user')) ?? {};
-      }
-
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -82,7 +66,7 @@ export class AuthService
      *
      * @param credentials
      */
-    signIn(credentials: { usuario: string; password: string }): Observable<any>
+    signIn(credentials: { email: string; password: string }): Observable<any>
     {
         // Throw error, if the user is already logged in
         if ( this._authenticated )
@@ -90,20 +74,17 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post(`${environment.baseUrl}/auth/login`, credentials).pipe(
+        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
-                this.accessToken = response.data.token.accessToken;
-
-                // Store the user in the local storage
-                this.user = response.data.usuario;
+                this.accessToken = response.accessToken;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
-                // // Store the user on the user service
-                // this._userService.user = response.data.usuario;
+                // Store the user on the user service
+                this._userService.user = response.user;
 
                 // Return a new observable with the response
                 return of(response);
@@ -201,7 +182,6 @@ export class AuthService
         }
 
         // If the access token exists and it didn't expire, sign in using it
-        // return this.signInUsingToken();
-        return of(true);
+        return this.signInUsingToken();
     }
 }

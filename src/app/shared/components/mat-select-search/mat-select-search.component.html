@@ -1,0 +1,19 @@
+<div class="flex">
+  <mat-form-field [class]="'w-full' + classCustom">
+    <mat-label *ngIf="label !== ''">{{label}}</mat-label>
+    <mat-select [formControlName]="controlName" placeholder="Search..." #singleSelect>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="itemFilterCtrl"></ngx-mat-select-search>
+      </mat-option>
+
+      <mat-option *ngFor="let item of filteredItems | async" [value]="isValueId ? item.id : item">
+        <ng-container *ngIf="itemsKey !== null; else elseTemplate">
+          {{item[itemsKey]}}
+        </ng-container>
+        <ng-template #elseTemplate>
+          {{item.name}}
+        </ng-template>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

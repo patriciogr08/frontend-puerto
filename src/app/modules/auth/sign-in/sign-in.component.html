@@ -34,7 +34,7 @@
                 #signInNgForm="ngForm">
 
                 <!-- Email field -->
-                <!-- <mat-form-field class="w-full">
+                <mat-form-field class="w-full">
                     <mat-label>Email address</mat-label>
                     <input
                         id="email"
@@ -46,18 +46,6 @@
                     <mat-error *ngIf="signInForm.get('email').hasError('email')">
                         Please enter a valid email address
                     </mat-error>
-                </mat-form-field> -->
-
-                <!-- User field -->
-                <mat-form-field class="w-full">
-                    <mat-label>User</mat-label>
-                    <input
-                        id="email"
-                        matInput
-                        [formControlName]="'usuario'">
-                    <mat-error *ngIf="signInForm.get('usuario').hasError('required')">
-                        User is required
-                    </mat-error>           
                 </mat-form-field>
 
                 <!-- Password field -->
@@ -89,7 +77,7 @@
                 </mat-form-field>
 
                 <!-- Actions -->
-                <!-- <div class="inline-flex items-end justify-between w-full mt-1.5">
+                <div class="inline-flex items-end justify-between w-full mt-1.5">
                     <mat-checkbox
                         [color]="'primary'"
                         [formControlName]="'rememberMe'">
@@ -99,7 +87,7 @@
                         class="text-md font-medium text-primary-500 hover:underline"
                         [routerLink]="['/forgot-password']">Forgot password?
                     </a>
-                </div> -->
+                </div>
 
                 <!-- Submit button -->
                 <button

@@ -2,101 +2,55 @@
 import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
-    // {
-    //     id: 'example',
-    //     title: 'Example',
-    //     subtitle: 'Example app',
-    //     type: 'group',
-    //     icon: 'heroicons_outline:home',
-    //     children: [
-    //         {
-    //             id: 'manager',
-    //             title: 'Manager',
-    //             type: 'collapsable',
-    //             icon: 'heroicons_outline:chart-pie',
-    //             children: [
-    //                 {
-    //                     id: 'users',
-    //                     title: 'Users',
-    //                     type: 'basic',
-    //                     icon: 'heroicons_outline:chart-pie',
-    //                     link: '/example/manager/users',
-    //                 },
-    //             ]
-    //         },
-    //         {
-    //             id: 'maintainers',
-    //             title: 'Maintainers',
-    //             type: 'collapsable',
-    //             icon: 'heroicons_outline:chart-pie',
-    //             children: [
-    //                 {
-    //                     id: 'orders',
-    //                     title: 'Orders',
-    //                     type: 'basic',
-    //                     icon: 'heroicons_outline:chart-pie',
-    //                     link: '/example/maintainers/orders',
-    //                 },
-    //             ]
-    //         }
-    //     ]
-    // },
     {
-        id: 'puerto-anconcito',
-        title: 'Puerto Anconcito',
-        subtitle: 'Puerto Anconcito',
+        id: 'example',
+        title: 'Example',
+        subtitle: 'Example app',
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
-            // {
-            //     id: 'manager',
-            //     title: 'Manager',
-            //     type: 'collapsable',
-            //     icon: 'heroicons_outline:chart-pie',
-            //     children: [
-            //         {
-            //             id: 'users',
-            //             title: 'Users',
-            //             type: 'basic',
-            //             icon: 'heroicons_outline:chart-pie',
-            //             link: '/example/manager/users',
-            //         },
-            //     ]
-            // },
             {
-                id: 'maintainers',
-                title: 'Mantenedores',
+                id: 'manager',
+                title: 'Manager',
                 type: 'collapsable',
                 icon: 'heroicons_outline:chart-pie',
                 children: [
                     {
-                        id: 'clients',
-                        title: 'Clientes',
+                        id: 'users',
+                        title: 'Users',
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
-                        link: '/puerto-anconcito/maintainers/clients',
+                        link: '/example/manager/users',
                     },
                 ]
             },
             {
-                id: 'processes',
-                title: 'Procesos',
+                id: 'maintainers',
+                title: 'Maintainers',
                 type: 'collapsable',
                 icon: 'heroicons_outline:chart-pie',
                 children: [
                     {
-                        id: 'turns',
-                        title: 'Cobros Garita',
+                        id: 'orders',
+                        title: 'Orders',
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
-                        link: '/puerto-anconcito/processes/turns',
+                        link: '/example/maintainers/orders',
                     },
+                ]
+            },
+            {
+                id: 'components',
+                title: 'Components',
+                type: 'collapsable',
+                icon: 'heroicons_outline:chart-pie',
+                children: [
                     {
-                        id: 'close-turns',
-                        title: 'Cierre de Turno',
+                        id: 'sandbox',
+                        title: 'Sandbox',
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
-                        link: '/puerto-anconcito/processes/close-turns',
+                        link: '/example/components/sandbox',
                     },
                 ]
             }

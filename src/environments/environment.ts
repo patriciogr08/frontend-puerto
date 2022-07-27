@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 const protocol = 'http://'
-const domain = '10.30.0.68';
-const port = '';
-const sufix = '/back-puerto-anconcito/public/api';
+const domain = 'localhost';
+const port = ':8000';
+const sufix = '/api';
 
 export const environment = {
     production: false,

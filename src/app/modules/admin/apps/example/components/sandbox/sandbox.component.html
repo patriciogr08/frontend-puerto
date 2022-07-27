@@ -1,0 +1,87 @@
+<div *transloco="let t" class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <div
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-4 sm:py-6 sm:px-6 border-b bg-card dark:bg-transparent">
+        <!-- Loader -->
+        <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <!-- <div>
+                <div class="hidden sm:flex flex-wrap items-center font-medium">
+                    <div>
+                        <a class="whitespace-nowrap text-primary-500">Projects</a>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <a class="ml-1 text-primary-500">Weekend Project</a>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <span class="ml-1 text-secondary">Overview</span>
+                    </div>
+                </div>
+                <div class="flex sm:hidden">
+                    <a class="inline-flex items-center -ml-1.5 text-secondary font-medium" [routerLink]="'./..'">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-left'">
+                        </mat-icon>
+                        <span class="ml-1">Back</span>
+                    </a>
+                </div>
+            </div> -->
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    {{ t('manager.users') }}
+                </h2>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex flex-shrink-0 justify-end items-center mt-4 sm:mt-0 sm:ml-4">
+            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="getUsers()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+            <button mat-flat-button [color]="'primary'" (click)="openDialogUser()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">{{ t('actions.add') }}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-y-auto" cdkScrollable>
+
+        <!-- CONTENT GOES HERE -->
+        <div class="flex flex-col flex-auto sm:overflow-y-auto p-2 sm:p-4" [formGroup]="form">
+            <!-- <ag-grid-angular style="width: auto; height: 100%;" [class]="gridTheme" [rowData]="users"
+                [columnDefs]="usersCols" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
+                [components]="renderComponents" (gridReady)="onGridReadyUsers($event)">
+            </ag-grid-angular> -->
+            {{form.value | json}}
+            <admin-mat-select-search [label]="'Frutas'" [items]="items" controlName="fruitId"
+                (itemEmit)="setItemSelectSeach($event)">
+            </admin-mat-select-search>
+            <admin-mat-select-search classCustom="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
+                [label]="'Frutas'" [items]="items" controlName="fruitId" (itemEmit)="setItemSelectSeach($event)">
+            </admin-mat-select-search>
+            <!-- <admin-mat-select-search [label]="'Frutas2'" [items]="items2" [itemsKey]="'nombre'" [isValueId]="false" (itemEmit)="setItemSelectSeach($event)">
+            </admin-mat-select-search> -->
+            <div class="mt-2">
+                <button mat-raised-button color="primary" (click)="openConfirmationDialog()">Confirmation</button>
+            </div>
+            <div class="mt-2">
+                <button mat-raised-button color="primary" (click)="openFuseAlertDialog()">Fuse Alert</button>
+                <button mat-raised-button color="primary" class="ml-2" (click)="openFuseAlertDialog()">Snackbar
+                    Alert</button>
+                <button mat-raised-button color="primary" class="ml-2" (click)="openFuseAlertDialog()">Sweet
+                    Alert</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>

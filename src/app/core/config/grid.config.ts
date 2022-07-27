@@ -1,4 +1,4 @@
-import { ColDef, GridOptions } from "ag-grid-community";
+import { CellClickedEvent, ColDef, GridApi, GridOptions } from "ag-grid-community";
 
 export function gridOptions(): GridOptions {
     return {

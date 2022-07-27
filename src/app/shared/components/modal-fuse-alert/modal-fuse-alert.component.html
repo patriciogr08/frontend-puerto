@@ -1,0 +1,11 @@
+<div *transloco="let t">
+    <fuse-alert [appearance]="'soft'" [dismissible]="true" [dismissed]="true" [name]="data.type" [type]="data.type"
+        (afterDismissed)="onCloseAlert($event)">
+        <ng-container *ngIf="message !== null; else elseTemplate">
+            {{ t('defaultTexts.alertMessage') }}
+        </ng-container>
+        <ng-template #elseTemplate>
+            {{data.message}}
+        </ng-template>
+    </fuse-alert>
+</div>
