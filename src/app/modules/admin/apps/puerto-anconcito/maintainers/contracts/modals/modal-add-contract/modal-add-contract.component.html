@@ -1,0 +1,56 @@
+<ng-container *transloco="let t">
+    <h2 mat-dialog-title>Contrato</h2>
+    <div mat-dialog-content class="flex flex-col" [formGroup]="contractForm">
+        <admin-mat-select-search label="Usuario" [items]="users" itemsKey="nombreusuario" controlName="idEmpleado">
+        </admin-mat-select-search>
+        <div class="flex flex-col sm:flex-row">
+            <mat-form-field class="min-w-full sm:min-w-48">
+                <mat-label>Curriculum</mat-label>
+                <input matInput type="text" readonly [formControl]="cv">
+                <ngx-dropzone class="hidden" #dropCV (change)="onSelect('cv', $event)" [multiple]="false"></ngx-dropzone>
+                <button mat-icon-button (click)="dropCV.showFileSelector()">
+                    <mat-icon [svgIcon]="'mat_solid:cloud_upload'" color="primary"></mat-icon>
+                </button>
+                <mat-error *ngIf="contractForm.invalid">Campo requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field class="min-w-full sm:ml-2 sm:min-w-48">
+                <mat-label>Referencias</mat-label>
+                <input matInput type="text" readonly [formControl]="referencias">
+                <ngx-dropzone class="hidden" #dropReferencia (change)="onSelect('referencias', $event)"></ngx-dropzone>
+                <button mat-icon-button (click)="dropReferencia.showFileSelector()">
+                    <mat-icon [svgIcon]="'mat_solid:cloud_upload'" color="primary"></mat-icon>
+                </button>
+                <mat-error *ngIf="contractForm.invalid">Campo requerido</mat-error>
+            </mat-form-field>
+        </div>
+        <!-- <div class="mb-3 font-medium">
+            <mat-checkbox labelPosition="before" formControlName="renovacion">Renovación</mat-checkbox>
+        </div> -->
+        <div class="flex flex-col sm:flex-row">
+            <mat-form-field class="min-w-full sm:min-w-48">
+                <mat-label>Tiempo Contrato</mat-label>
+                <input matInput type="number" formControlName="mesesContrato">
+                <mat-error *ngIf="contractForm.invalid">Campo requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field class="min-w-full sm:ml-2 sm:min-w-48">
+                <mat-label>Fecha Incio</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="fechaInicio">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions class="justify-end">
+        <button mat-raised-button class="min-w-26" [mat-dialog-close]="false" [disabled]="isLoading" color="warn">{{
+            t('actions.cancel') }}</button>
+        <button mat-raised-button class="min-w-26"  color="primary"
+            (click)="save()">
+            <ng-container *ngIf="isLoading; else elseTemplate">
+                <mat-spinner [diameter]="25"></mat-spinner>
+            </ng-container>
+            <ng-template #elseTemplate>
+                {{ t('actions.save') }}
+            </ng-template>
+        </button>
+    </div>
+</ng-container>

@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { IResponse } from 'app/shared/interfaces/response.interface';
+import { IResponse, IResponsePA } from 'app/shared/interfaces/response.interface';
+import { ModalAlertService } from 'app/shared/services/modal-alert.service';
 import { Restangular } from 'ngx-restangular';
 
 @Component({
@@ -17,7 +18,7 @@ export class ModalAddClientComponent implements OnInit {
 
   constructor(
     @Inject(Restangular) public restangular,
-    // public modalAlertService: ModalAlertService,
+    public modalAlertService: ModalAlertService,
     public dialogRef: MatDialogRef<ModalAddClientComponent>,
     public fb: FormBuilder
   ) { }
@@ -38,10 +39,12 @@ export class ModalAddClientComponent implements OnInit {
   save() {
     this.isLoading = true;
     this.clientForm.disable();
-    this.restangular.all('clientes').post(this.clientForm.value).subscribe((res: IResponse) => {
-      this.dialogRef.close(res.data);
-      this.isLoading = false;
-      // this.modalAlertService.openAlert(res.message.type, res.message.body, false);
+    this.restangular.all('clientes').post(this.clientForm.value).subscribe((res: IResponsePA) => {
+      if (res.success) {
+        this.modalAlertService.open('success', res.success.content);
+        this.dialogRef.close(res.data);
+        this.isLoading = false;
+      }
     })
   }
 }

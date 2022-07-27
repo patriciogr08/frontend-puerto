@@ -2,7 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from 'app/core/auth/auth.service';
-import { IResponse } from 'app/shared/interfaces/response.interface';
+import { IResponse, IResponsePA } from 'app/shared/interfaces/response.interface';
+import { ModalAlertService } from 'app/shared/services/modal-alert.service';
 import { Restangular } from 'ngx-restangular';
 
 @Component({
@@ -20,7 +21,7 @@ export class ModalCloseTurnComponent implements OnInit {
   constructor(
     @Inject(Restangular) public restangular,
     public authService: AuthService,
-    // public modalAlertService: ModalAlertService,
+    public modalAlertService: ModalAlertService,
     public dialogRef: MatDialogRef<ModalCloseTurnComponent>,
     public fb: FormBuilder
   ) { }
@@ -40,10 +41,16 @@ export class ModalCloseTurnComponent implements OnInit {
   save() {
     this.isLoading = true;
     this.closeTurnForm.disable();
-    this.restangular.one('historialCobroGarita').all('cerrarTurnoCorbo').post(this.closeTurnForm.value).subscribe((res: IResponse) => {
-      this.dialogRef.close(res);
-      this.isLoading = false;
-      // this.modalAlertService.openAlert(res.message.type, res.message.body, false);
+    this.restangular.one('historialCobroGarita').all('cerrarTurnoCorbo').post(this.closeTurnForm.value).subscribe((res: IResponsePA) => {
+      if (res) {
+        this.modalAlertService.open('success', res.success.content);
+        this.isLoading = false;
+        this.dialogRef.close(res);
+      }
+    }, (err) => {
+        this.modalAlertService.open('error', err.error.error.content.error[0]);
+        this.closeTurnForm.enable();
+        this.isLoading = false;
     })
   }
 }

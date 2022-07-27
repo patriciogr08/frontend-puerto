@@ -14,6 +14,7 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { RestangularModule } from 'ngx-restangular';
 import { RestangularConfigFactory } from './core/config/restangular.config';
+import { AuthService } from './core/auth/auth.service';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -42,7 +43,7 @@ const routerConfig: ExtraOptions = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-        RestangularModule.forRoot(RestangularConfigFactory),
+        RestangularModule.forRoot([AuthService], RestangularConfigFactory, ),
     ],
     bootstrap   : [
         AppComponent

@@ -1,0 +1,44 @@
+<div *transloco="let t" class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <div
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-4 sm:py-6 sm:px-6 border-b bg-card dark:bg-transparent">
+        <!-- Loader -->
+        <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    Usuarios
+                </h2>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex flex-shrink-0 justify-end items-center mt-4 sm:mt-0 sm:ml-4">
+            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="paginate ? getUsersPaginate() : getUsers()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+            <button mat-flat-button [color]="'primary'" (click)="openDialogUser()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">{{ t('actions.add') }}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-y-auto" cdkScrollable>
+
+        <!-- CONTENT GOES HERE -->
+        <div class="flex flex-col flex-auto sm:overflow-y-auto p-2 sm:p-4">
+            <ag-grid-angular style="width: auto; height: 100%;" [class]="gridTheme" [rowData]="users"
+                [columnDefs]="usersCols" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
+                [components]="renderComponents" (gridReady)="onGridReadyUsers($event)">
+            </ag-grid-angular>
+        </div>
+
+    </div>
+
+</div>

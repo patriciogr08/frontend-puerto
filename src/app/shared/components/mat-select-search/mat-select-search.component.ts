@@ -45,6 +45,7 @@ export class MatSelectSearchComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.items);
     // set initial selection
     // this.itemCtrl.setValue(this.items[10]);
 

@@ -2,58 +2,133 @@
 import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
+    // {
+    //     id: 'example',
+    //     title: 'Example',
+    //     subtitle: 'Example app',
+    //     type: 'group',
+    //     icon: 'heroicons_outline:home',
+    //     children: [
+    //         {
+    //             id: 'manager',
+    //             title: 'Manager',
+    //             type: 'collapsable',
+    //             icon: 'heroicons_outline:chart-pie',
+    //             children: [
+    //                 {
+    //                     id: 'users',
+    //                     title: 'Users',
+    //                     type: 'basic',
+    //                     icon: 'heroicons_outline:chart-pie',
+    //                     link: '/example/manager/users',
+    //                 },
+    //             ]
+    //         },
+    //         {
+    //             id: 'maintainers',
+    //             title: 'Maintainers',
+    //             type: 'collapsable',
+    //             icon: 'heroicons_outline:chart-pie',
+    //             children: [
+    //                 {
+    //                     id: 'orders',
+    //                     title: 'Orders',
+    //                     type: 'basic',
+    //                     icon: 'heroicons_outline:chart-pie',
+    //                     link: '/example/maintainers/orders',
+    //                 },
+    //             ]
+    //         }
+    //     ]
+    // },
     {
-        id: 'example',
-        title: 'Example',
-        subtitle: 'Example app',
+        id: 'puerto-anconcito',
+        title: 'Puerto Anconcito',
+        subtitle: 'Puerto Anconcito',
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
-            {
-                id: 'manager',
-                title: 'Manager',
-                type: 'collapsable',
-                icon: 'heroicons_outline:chart-pie',
-                children: [
-                    {
-                        id: 'users',
-                        title: 'Users',
-                        type: 'basic',
-                        icon: 'heroicons_outline:chart-pie',
-                        link: '/example/manager/users',
-                    },
-                ]
-            },
+            // {
+            //     id: 'manager',
+            //     title: 'Manager',
+            //     type: 'collapsable',
+            //     icon: 'heroicons_outline:chart-pie',
+            //     children: [
+            //         {
+            //             id: 'users',
+            //             title: 'Users',
+            //             type: 'basic',
+            //             icon: 'heroicons_outline:chart-pie',
+            //             link: '/example/manager/users',
+            //         },
+            //     ]
+            // },
             {
                 id: 'maintainers',
-                title: 'Maintainers',
+                title: 'Mantenedores',
                 type: 'collapsable',
                 icon: 'heroicons_outline:chart-pie',
                 children: [
                     {
-                        id: 'orders',
-                        title: 'Orders',
+                        id: 'clients',
+                        title: 'Clientes',
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
-                        link: '/example/maintainers/orders',
+                        link: '/puerto-anconcito/maintainers/clients',
+                    },
+                    {
+                        id: 'users',
+                        title: 'Usuarios',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/maintainers/users',
+                    },
+                    {
+                        id: 'contracts',
+                        title: 'Contratos',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/maintainers/contracts',
                     },
                 ]
             },
             {
-                id: 'components',
-                title: 'Components',
+                id: 'processes',
+                title: 'Procesos',
                 type: 'collapsable',
                 icon: 'heroicons_outline:chart-pie',
                 children: [
                     {
-                        id: 'sandbox',
-                        title: 'Sandbox',
+                        id: 'turns',
+                        title: 'Cobros Garita',
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
-                        link: '/example/components/sandbox',
+                        link: '/puerto-anconcito/processes/turns',
+                    },
+                    {
+                        id: 'close-turns',
+                        title: 'Cierre de Turno',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/processes/close-turns',
                     },
                 ]
-            }
+            },
+            // {
+            //     id: 'components',
+            //     title: 'Components',
+            //     type: 'collapsable',
+            //     icon: 'heroicons_outline:chart-pie',
+            //     children: [
+            //         {
+            //             id: 'sandbox',
+            //             title: 'Sandbox',
+            //             type: 'basic',
+            //             icon: 'heroicons_outline:chart-pie',
+            //             link: '/example/components/sandbox',
+            //         },
+            //     ]
+            // }
         ]
     },
 ];

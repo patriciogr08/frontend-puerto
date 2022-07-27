@@ -5,15 +5,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { FuseAlertService } from '@fuse/components/alert';
 import { FuseConfigService } from '@fuse/services/config';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GridOptions, ColDef, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
+import { GridOptions, IDatasource, ColDef, GridApi, ColumnApi, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { defaultColDef, gridOptions } from 'app/core/config/grid.config';
 import { Restangular } from 'ngx-restangular';
 import { ReplaySubject } from 'rxjs';
-import { ManagerService } from '../manager.service';
+import { MaintainersService } from '../maintainers.service';
 import { ModalAddUserComponent } from './modals/modal-add-user/modal-add-user.component';
 
 @Component({
-  selector: 'app-users',
+  selector: 'admin-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
@@ -24,21 +24,24 @@ export class UsersComponent implements OnInit {
   public isLoading: boolean = false;
   public searchInputControl: FormControl;
 
+  //ARRAYS
+  public users: Array<any> = [];
+
+  //FORMS
+
+  //GRID
   public defaultColDef: ColDef;
   public renderComponents: any;
-
-  public users: Array<any> = [];
-  public userCtrl: FormControl = new FormControl();
-  public userFilterCtrl: FormControl = new FormControl();
-  public filteredUsers: ReplaySubject<Array<any>> = new ReplaySubject<Array<any>>(1);
-
+  public pagination: boolean = false;
+  public paginationPageSize: number = 1;
+  public dataSource: IDatasource;
   public usersCols: Array<ColDef> = []
   public gridApiUsers!: GridApi;
   public gridColumnApiUsers!: ColumnApi;
 
   constructor(
     public dialog: MatDialog,
-    public managerService: ManagerService,
+    public maintainersService: MaintainersService,
     private fuseConfigService: FuseConfigService,
     public fuseAlertService: FuseAlertService,
     public fuseConfirmationService: FuseConfirmationService,
@@ -52,23 +55,25 @@ export class UsersComponent implements OnInit {
       onGridSizeChanged: _onGridSizeChanged => {
         this.gridApiUsers.sizeColumnsToFit();
       },
+      rowModelType: this.pagination ? 'infinite' : null,
+      cacheBlockSize: this.pagination ? this.paginationPageSize : null,
       ...gridOptions()
     }
 
     this.usersCols = [
       { field: 'id', hide: true },
-      {
-        field: 'code',
-        width: 70,
-        suppressSizeToFit: true,
-      },
-      { field: 'name' },
+      { field: 'primerNombre' },
+      { field: 'segundoNombre' },
+      { field: 'primerApellido' },
+      { field: 'segundoApellido' },
+      { field: 'usuario' },
+      { field: 'email' },
       { field: 'created_at' },
       { field: 'updated_at' },
-      {
-        field: "Actions",
-        cellRenderer: 'renderActionButtons',
-      }
+      // {
+      //   field: "Actions",
+      //   cellRenderer: 'renderActionButtons',
+      // }
     ];
 
     this.fuseConfigService.config$.subscribe((data) => {
@@ -77,28 +82,46 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUsers();
+    this.pagination ? null : this.getUsers();
   }
 
   getUsers() {
     this.isLoading = true;
     this.gridApiUsers !== undefined ? this.gridApiUsers.showLoadingOverlay() : null;
-    this.managerService.getUsers().subscribe((data) => {
+    this.restangular.all('').customGET('users').subscribe((data) => {
       this.gridApiUsers.hideOverlay();
       this.isLoading = false;
-      this.users = data;
+      this.users = data.data;
     }, (err: HttpErrorResponse) => {
       this.errHandler(err);
     });
   }
 
+  getUsersPaginate() {
+    // this.dataSource = {
+    //   getRows: (params: IGetRowsParams) => {
+    //     this.isLoading = true;
+    //     this.gridApiUsers !== undefined ? this.gridApiUsers.showLoadingOverlay() : null;
+    //     const page = params.endRow / this.paginationPageSize;
+    //     this.maintainersService.getUsers(this.pagination, this.paginationPageSize, page).subscribe((data) => {
+    //       params.successCallback(data.data.data, data.data.total)
+    //       this.gridApiUsers.hideOverlay();
+    //       this.isLoading = false;
+    //     })
+    //   }
+    // }
+    // this.gridApiUsers.setDatasource(this.dataSource);
+  }
+
   openDialogUser() {
-    const dialogRef = this.dialog.open(ModalAddUserComponent);
+    const dialogRef = this.dialog.open(ModalAddUserComponent, {
+      minWidth: 'auto'
+    });
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.gridApiUsers.applyTransaction({
-          add: [res.row],
+          add: [res],
           // addIndex: 0
         });
       }
@@ -108,6 +131,7 @@ export class UsersComponent implements OnInit {
   onGridReadyUsers(params: GridReadyEvent) {
     this.gridApiUsers = params.api;
     this.gridColumnApiUsers = params.columnApi;
+    this.pagination ? this.getUsersPaginate() : null;
   }
 
   errHandler(err: HttpErrorResponse) {

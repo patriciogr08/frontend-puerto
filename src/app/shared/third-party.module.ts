@@ -4,7 +4,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // import { FileSaverModule } from 'ngx-filesaver';
-// import { NgxDropzoneModule } from 'ngx-dropzone';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 
 
@@ -18,7 +18,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     TranslocoModule,
     NgxMatSelectSearchModule,
     // FileSaverModule,
-    // NgxDropzoneModule
+    NgxDropzoneModule
   ]
 })
 export class ThirdPartyModule { }

@@ -12,3 +12,14 @@ export interface IResponse {
     data: IData,
     message: IMessage
 }
+
+export interface ISuccess {
+    code: number,
+    content: string,
+}
+
+export interface IResponsePA {
+    data: object,
+    error: object,
+    success: ISuccess
+}

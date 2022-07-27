@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseAlertService } from '@fuse/components/alert';
 import { FuseConfigService } from '@fuse/services/config';
@@ -8,7 +8,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridOptions, IDatasource, ColDef, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
 import { AuthService } from 'app/core/auth/auth.service';
 import { defaultColDef, gridOptions } from 'app/core/config/grid.config';
-import { IResponse } from 'app/shared/interfaces/response.interface';
+import { IResponsePA } from 'app/shared/interfaces/response.interface';
+import { ModalAlertService } from 'app/shared/services/modal-alert.service';
 import { Restangular } from 'ngx-restangular';
 import { MaintainersService } from '../../maintainers/maintainers.service';
 import { ModalCloseTurnComponent } from './modals/modal-close-turn/modal-close-turn.component';
@@ -24,27 +25,24 @@ export class CloseTurnsComponent implements OnInit {
   public gridOptions: GridOptions;
   public isLoading: boolean = false;
   public isPanelOpen: boolean = true;
-  public searchInputControl: FormControl;
-
+  public totalRecaudado: number = 0;
   public user: any = {};
+
+  //ARRAYS
+  public values: Array<any> = [];
+
+  //FORMS
   public userForm: FormGroup;
 
+  //GRID
+  public defaultColDef: ColDef;
+  public valuesCols: Array<ColDef> = [];
+  public gridApiValues!: GridApi;
+  public gridColumnApiValues!: ColumnApi;
   public pagination: boolean = false;
   public paginationPageSize: number = 1;
   public dataSource: IDatasource;
-
-  public defaultColDef: ColDef;
   public renderComponents: any;
-
-  public values: Array<any> = [];
-  public totalRecaudado: number = 0;
-  // public clientCtrl: FormControl = new FormControl();
-  // public clientFilterCtrl: FormControl = new FormControl();
-  // public filteredClients: ReplaySubject<Array<any>> = new ReplaySubject<Array<any>>(1);
-
-  public valuesCols: Array<ColDef> = []
-  public gridApiValues!: GridApi;
-  public gridColumnApiValues!: ColumnApi;
 
   constructor(
     public fb: FormBuilder,
@@ -53,6 +51,7 @@ export class CloseTurnsComponent implements OnInit {
     public maintainersService: MaintainersService,
     private fuseConfigService: FuseConfigService,
     public fuseAlertService: FuseAlertService,
+    public modalAlertService: ModalAlertService,
     public fuseConfirmationService: FuseConfirmationService,
     @Inject(Restangular) public restangular,
   ) {
@@ -110,7 +109,6 @@ export class CloseTurnsComponent implements OnInit {
     this.gridApiValues !== undefined ? this.gridApiValues.showLoadingOverlay() : null;
     const params = { idUsuarioCreacion: this.user.id }
     this.restangular.one('historialCobroGarita').all('valoresTurno').customPOST(params).subscribe((data) => {
-      console.log(data);
       this.gridApiValues.hideOverlay();
       this.isLoading = false;
       this.totalRecaudado = data.data.totalRecaudado;
@@ -169,13 +167,10 @@ export class CloseTurnsComponent implements OnInit {
         "nota": "Agradecemos la atención prestada a esta notificación"
       }
     }
-    this.restangular.one('correo').all('sendinblue').post(params).subscribe((res: IResponse) => {
+    this.restangular.one('correo').all('sendinblue').post(params).subscribe((res: IResponsePA) => {
       if (res) {
-        alert('TURNO CERRADO Y CORREO ENVIADO');
-        this.values = [];
-        this.totalRecaudado = 0;
+        this.modalAlertService.open('success', res.success.content);
       }
-      // this.modalAlertService.openAlert(res.message.type, res.message.body, false);
     })
   }
 
@@ -184,10 +179,12 @@ export class CloseTurnsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        console.log(res);
+        this.values = [];
+        this.userForm.reset();
+        this.totalRecaudado = 0;
         this.sendEmail(res.data);
       }
-    });
+    })
   }
 
   onGridReadyValues(params: GridReadyEvent) {
@@ -197,6 +194,8 @@ export class CloseTurnsComponent implements OnInit {
   }
 
   errHandler(err: HttpErrorResponse) {
+    const message: string = 'Error en la consulta, vuelva a intentar!'
+    this.modalAlertService.open('error', err.error.error ? err.error.error.content.error[0] : message);
     this.gridApiValues.hideOverlay();
     this.isLoading = false;
   }

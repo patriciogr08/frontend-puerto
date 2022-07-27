@@ -36,7 +36,6 @@ export class ModalAddUserComponent implements OnInit {
   save() {
     this.isLoading = true;
     this.userForm.disable();
-    console.log(this.userForm.value);
     this.restangular.all('user').post(this.userForm.value).subscribe((res: IResponse) => {
       this.dialogRef.close(res.data);
       this.isLoading = false;
