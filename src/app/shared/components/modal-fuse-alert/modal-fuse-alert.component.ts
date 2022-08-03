@@ -18,7 +18,6 @@ export class ModalFuseAlertComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
     this.openAlert(this.data.type);
   }
 

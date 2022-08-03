@@ -55,7 +55,6 @@ export class ModalAddContractComponent implements OnInit {
 
   getUsers() {
     this.restangular.one('controlEmpleados').all('usuarios').customGET('obtenerUsuarios').pipe(takeUntil(this._unsubscribeAll)).subscribe((res) => {
-      console.log(res);
       if (res) {
         this.users = res.data;
       }
@@ -63,7 +62,6 @@ export class ModalAddContractComponent implements OnInit {
   }
 
   onSelect(control, event) {
-		console.log(control);
     this.file = event.addedFiles[0];
     this[control].setValue(this.file.name);
     this.getBase64(this.file, (data) => {
@@ -76,7 +74,6 @@ export class ModalAddContractComponent implements OnInit {
 	}
 
   onRemove(event) {
-		console.log(event);
 		this.files.splice(this.files.indexOf(event), 1);
 	}
 
@@ -91,7 +88,6 @@ export class ModalAddContractComponent implements OnInit {
     this.contractForm.disable();
     this.cv.disable();
     this.referencias.disable();
-    console.log(this.contractForm.value);
     this.restangular.all('controlEmpleados').post(this.contractForm.value).subscribe((res: IResponsePA) => {
       if (res.success) {
         this.modalAlertService.open('success', res.success.content);
@@ -99,7 +95,6 @@ export class ModalAddContractComponent implements OnInit {
         this.isLoading = false;
       }
     }, (err) => {
-      console.log(err);
       this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
       this.contractForm.enable();
       this.cv.enable();

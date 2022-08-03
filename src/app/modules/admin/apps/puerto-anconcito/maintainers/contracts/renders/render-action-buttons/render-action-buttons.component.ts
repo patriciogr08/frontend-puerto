@@ -27,7 +27,6 @@ export class RenderActionButtonsComponent implements OnInit {
   // gets called once before the renderer is used
   agInit(params: ICellRendererParams): void {
     this.params = params;
-    // console.log(this.params);
   }
 
   delete() {
@@ -37,7 +36,6 @@ export class RenderActionButtonsComponent implements OnInit {
         this.isLoading = false;
       }
     }, (err) => {
-      console.log(err);
       this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
       this.isLoading = false;
     })

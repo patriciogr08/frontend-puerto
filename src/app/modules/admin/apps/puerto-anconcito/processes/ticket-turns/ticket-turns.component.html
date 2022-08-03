@@ -21,10 +21,10 @@
             <!-- Search -->
             <admin-mat-select-search classCustom="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
                 [items]="clients" itemsKey="nombres" [isValueId]="false" controlName="client"></admin-mat-select-search>
-            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="getTurns()">
+            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="getClients()">
                 <mat-icon>refresh</mat-icon>
             </button>
-            <button mat-flat-button [color]="'primary'" (click)="openDialogUploadFile()">
+            <button mat-flat-button [color]="'primary'" (click)="openDialogClient()">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">{{ t('actions.add') }}</span>
             </button>

@@ -11,6 +11,7 @@ import { Restangular } from 'ngx-restangular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ManagerService } from '../../../example/manager/manager.service';
+import { ModalAddClientComponent } from '../../maintainers/clients/modals/modal-add-client/modal-add-client.component';
 
 @Component({
   selector: 'app-ticket-turns',
@@ -151,7 +152,6 @@ export class TicketTurnsComponent implements OnInit {
     })
     this.clientSelectedForm.get('client').valueChanges.pipe(takeUntil(this._unsubscribeAll)).subscribe((data) => {
       if (data) {
-        console.log(data);
         this.clientForm.patchValue(data);
         this.turnForm.get('idCliente').setValue(data.id);
       }
@@ -168,6 +168,16 @@ export class TicketTurnsComponent implements OnInit {
         this.turnForm.reset();
       }
     })
+  }
+
+  openDialogClient() {
+    const dialogRef = this.dialog.open(ModalAddClientComponent);
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.getClients();
+      }
+    });
   }
 
   onGridReadyTurns(params: GridReadyEvent) {

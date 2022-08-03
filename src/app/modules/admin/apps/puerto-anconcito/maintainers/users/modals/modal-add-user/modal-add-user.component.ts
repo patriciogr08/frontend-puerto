@@ -44,7 +44,6 @@ export class ModalAddUserComponent implements OnInit {
   save() {
     this.isLoading = true;
     this.userForm.disable();
-    console.log(this.userForm.value);
     this.restangular.all('users').post(this.userForm.value).subscribe((res: IResponsePA) => {
       if (res.success) {
         this.modalAlertService.open('success', res.success.content);
@@ -52,7 +51,6 @@ export class ModalAddUserComponent implements OnInit {
         this.isLoading = false;
       }
     }, (err) => {
-      console.log(err);
       this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
       this.userForm.enable();
       this.isLoading = false;
