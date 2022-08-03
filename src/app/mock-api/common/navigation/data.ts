@@ -90,6 +90,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         icon: 'heroicons_outline:chart-pie',
                         link: '/puerto-anconcito/maintainers/contracts',
                     },
+                    {
+                        id: 'params',
+                        title: 'Parametros',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/maintainers/params',
+                    },
                 ]
             },
             {

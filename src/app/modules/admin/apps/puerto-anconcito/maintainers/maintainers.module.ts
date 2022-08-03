@@ -6,6 +6,9 @@ import { MaterialModule } from 'app/shared/material.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThirdPartyModule } from 'app/shared/third-party.module';
 import { ModalAddClientComponent } from './clients/modals/modal-add-client/modal-add-client.component';
+import { ParamsComponent } from './params/params.component';
+import { ParamsParentsComponent } from './params/params-parents/params-parents.component';
+import { ParamsChildsComponent } from './params/params-childs/params-childs.component';
 import { UsersComponent } from './users/users.component';
 import { ModalAddUserComponent } from './users/modals/modal-add-user/modal-add-user.component';
 import { ContractsComponent } from './contracts/contracts.component';
@@ -24,7 +27,11 @@ const maintainersRoutes: Route[] = [
   {
     path: 'contracts',
     component: ContractsComponent
-  }
+  },
+  {
+    path: 'params',
+    component: ParamsComponent
+  },
 ];
 
 @NgModule({
@@ -32,13 +39,15 @@ const maintainersRoutes: Route[] = [
     ClientsComponent,
     ModalAddClientComponent,
     UsersComponent,
-    ModalAddUserComponent,
     ContractsComponent,
+    ModalAddUserComponent,
     ModalAddContractComponent,
-    RenderActionButtonsComponent
+    RenderActionButtonsComponent,
+    ParamsComponent,
+    ParamsParentsComponent,
+    ParamsChildsComponent,
   ],
   imports: [
-    CommonModule,
     ThirdPartyModule,
     MaterialModule,
     SharedModule,

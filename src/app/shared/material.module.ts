@@ -14,6 +14,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -37,7 +38,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatExpansionModule,
     MatCardModule,
     MatCheckboxModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatTabsModule
   ]
 })
 export class MaterialModule { }
