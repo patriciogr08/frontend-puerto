@@ -1,0 +1,30 @@
+<ng-container *transloco="let t">
+    <h2 mat-dialog-title>{{ t('maintainers.client') }}</h2>
+    <div mat-dialog-content class="flex flex-col" [formGroup]="paramChildForm">
+        <mat-form-field>
+            <mat-label>Nombre</mat-label>
+            <input matInput type="text" formControlName="nombre">
+            <mat-error *ngIf="paramChildForm.invalid">ERROR</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Código</mat-label>
+            <input matInput formControlName="codigo">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Valor</mat-label>
+            <input matInput formControlName="valor">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions class="justify-end">
+        <button mat-raised-button class="min-w-26" [mat-dialog-close]="false" [disabled]="isLoading"
+            color="warn">{{ t('actions.cancel') }}</button>
+        <button mat-raised-button class="min-w-26" [disabled]="isLoading || paramChildForm.invalid" color="primary" (click)="save()">
+            <ng-container *ngIf="isLoading; else elseTemplate">
+                <mat-spinner [diameter]="25"></mat-spinner>
+            </ng-container>
+            <ng-template #elseTemplate>
+                {{ t('actions.save') }}
+            </ng-template>
+        </button>
+    </div>
+</ng-container>

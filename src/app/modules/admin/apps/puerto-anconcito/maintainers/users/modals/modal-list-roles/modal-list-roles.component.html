@@ -1,0 +1,36 @@
+<ng-container *transloco="let t">
+    <h2 mat-dialog-title>Roles de {{data.primerNombre}} {{data.primerApellido}}</h2>
+    <div mat-dialog-content class="flex flex-col">
+        <!-- CONTENT GOES HERE -->
+        <div class="flex flex-shrink-0 justify-end items-center mt-4 sm:mt-0 sm:ml-4" [formGroup]="roleSelectedForm">
+            <!-- Search -->
+            <admin-mat-select-search classCustom="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
+                [items]="roles" [isValueId]="false" controlName="role"></admin-mat-select-search>
+            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="getClients()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+            <button mat-flat-button [color]="'primary'" [disabled]="isLoading || roleSelectedForm.invalid" (click)="save()">
+                <span class="ml-2 mr-1">Asignar ROL</span>
+            </button>
+        </div>
+        <div class="flex flex-col flex-auto sm:overflow-y-auto p-2 sm:p-4 h-100">
+            <ag-grid-angular style="width: 100%; height: 100%;" [class]="gridTheme" [rowData]="userRoles"
+                [columnDefs]="userRolesCols" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
+                [components]="renderComponents" [context]="context" (gridReady)="onGridReadyUserRoles($event)">
+            </ag-grid-angular>
+        </div>
+    </div>
+    <!-- <div mat-dialog-actions class="justify-end">
+        <button mat-raised-button class="min-w-26" [mat-dialog-close]="false" [disabled]="isLoading"
+            color="warn">{{ t('actions.cancel') }}</button>
+        <button mat-raised-button class="min-w-26" [disabled]="isLoading || clientForm.invalid" color="primary"
+            (click)="save()">
+            <ng-container *ngIf="isLoading; else elseTemplate">
+                <mat-spinner [diameter]="25"></mat-spinner>
+            </ng-container>
+            <ng-template #elseTemplate>
+                {{ t('actions.save') }}
+            </ng-template>
+        </button>
+    </div> -->
+</ng-container>

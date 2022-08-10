@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IResponse } from 'app/shared/interfaces/response.interface';
 import { Restangular } from 'ngx-restangular';
 
@@ -14,29 +14,38 @@ export class ModalAddUserComponent implements OnInit {
   public userForm: FormGroup;
   public isLoading: boolean = false;
   public minLengthCode: number = 3
+  public userApi: any;
 
   constructor(
-    @Inject(Restangular) public restangular,
+    @Inject(Restangular) public restangular: Restangular,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     // public modalAlertService: ModalAlertService,
     public dialogRef: MatDialogRef<ModalAddUserComponent>,
     public fb: FormBuilder
-  ) { }
-
-  ngOnInit(): void {
-    this.userForm = this.createForm();
+  ) { 
+    
   }
 
-  createForm() {
+  ngOnInit(): void {
+    console.log(this.data)
+    this.userForm = this.createForm(this.data);
+    this.userApi = this.restangular[this.data === null ? 'all' : 'one']('users', this.data === null ? null : this.data.id); //ALL para POST y ONE para PUT
+    console.log(this.userApi);
+  }
+
+  createForm(user) {
     return this.fb.group({
-      code: [null, [Validators.required, Validators.minLength(this.minLengthCode)]],
-      name: []
+      id: [user ? user.id : null],
+      code: [user ? user.code : null, [Validators.required, Validators.minLength(this.minLengthCode)]],
+      name: [user ? user.name : null]
     })
   }
 
   save() {
     this.isLoading = true;
     this.userForm.disable();
-    this.restangular.all('user').post(this.userForm.value).subscribe((res: IResponse) => {
+    console.log(this.userForm.value);
+    this.userApi[this.data === null ? 'post' : 'customPUT'](this.userForm.value).subscribe((res: IResponse) => {
       this.dialogRef.close(res.data);
       this.isLoading = false;
       // this.modalAlertService.openAlert(res.message.type, res.message.body, false);

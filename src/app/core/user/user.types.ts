@@ -14,6 +14,7 @@ export interface User
     name: string;
     primerNombre: string;
     email: string;
+    roles?: any;
     avatar?: string;
     activo: string;
     status?: string;

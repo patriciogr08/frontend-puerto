@@ -8,13 +8,18 @@ import { ModalFuseAlertComponent } from './modal-fuse-alert/modal-fuse-alert.com
 import { FuseAlertModule } from '@fuse/components/alert';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@ngneat/transloco';
+import { RenderActionButtonsComponent } from './render-action-buttons/render-action-buttons.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
 @NgModule({
   declarations: [
     MatSelectSearchComponent,
-    ModalFuseAlertComponent
+    ModalFuseAlertComponent,
+    RenderActionButtonsComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +31,10 @@ import { TranslocoModule } from '@ngneat/transloco';
 
     //Material
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
   ],
   exports: [
     MatSelectSearchComponent,

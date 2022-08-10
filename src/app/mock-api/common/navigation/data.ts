@@ -84,6 +84,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         link: '/puerto-anconcito/maintainers/users',
                     },
                     {
+                        id: 'roles',
+                        title: 'Roles',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/maintainers/roles',
+                    },
+                    {
                         id: 'contracts',
                         title: 'Contratos',
                         type: 'basic',

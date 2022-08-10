@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { FuseAlertService } from '@fuse/components/alert';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FuseConfigService } from '@fuse/services/config';
 import { FuseConfirmationConfig, FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridOptions, ColDef, IDatasource, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
@@ -11,15 +10,13 @@ import { RenderActionButtonsComponent } from 'app/shared/components/render-actio
 import { IResponsePA } from 'app/shared/interfaces/response.interface';
 import { ModalAlertService } from 'app/shared/services/modal-alert.service';
 import { Restangular } from 'ngx-restangular';
-import { MaintainersService } from '../maintainers.service';
-import { ModalAddContractComponent } from './modals/modal-add-contract/modal-add-contract.component';
 
 @Component({
-  selector: 'admin-contracts',
-  templateUrl: './contracts.component.html',
-  styleUrls: ['./contracts.component.scss']
+  selector: 'admin-modal-list-roles',
+  templateUrl: './modal-list-roles.component.html',
+  styleUrls: ['./modal-list-roles.component.scss']
 })
-export class ContractsComponent implements OnInit {
+export class ModalListRolesComponent implements OnInit {
   //VARIABLES
   public gridTheme: string = 'ag-theme-alpine';
   public gridOptions: GridOptions;
@@ -28,9 +25,11 @@ export class ContractsComponent implements OnInit {
   public context: any;
 
   //ARRAYS
-  public contracts: Array<any> = [];
+  public roles: Array<any> = [];
+  public userRoles: Array<any> = [];
 
   //FORMS
+  public roleSelectedForm: FormGroup;
 
   //GRID
   public defaultColDef: ColDef;
@@ -38,18 +37,19 @@ export class ContractsComponent implements OnInit {
   public pagination: boolean = false;
   public paginationPageSize: number = 1;
   public dataSource: IDatasource;
-  public contractsCols: Array<ColDef> = []
-  public gridApiContracts!: GridApi;
-  public gridColumnApiContracts!: ColumnApi;
+  public userRolesCols: Array<ColDef> = []
+  public gridApiUserRoles!: GridApi;
+  public gridColumnApiUserRoles!: ColumnApi;
+
 
   constructor(
-    public dialog: MatDialog,
-    public maintainersService: MaintainersService,
-    private fuseConfigService: FuseConfigService,
-    public fuseAlertService: FuseAlertService,
-    public fuseConfirmationService: FuseConfirmationService,
-    public modalAlertService: ModalAlertService,
     @Inject(Restangular) public restangular,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public modalAlertService: ModalAlertService,
+    private fuseConfigService: FuseConfigService,
+    public fuseConfirmationService: FuseConfirmationService,
+    public dialogRef: MatDialogRef<ModalListRolesComponent>,
+    public fb: FormBuilder
   ) {
     this.defaultColDef = defaultColDef
     this.renderComponents = {
@@ -57,7 +57,7 @@ export class ContractsComponent implements OnInit {
     };
     this.gridOptions = {
       onGridSizeChanged: _onGridSizeChanged => {
-        this.gridApiContracts.sizeColumnsToFit();
+        this.gridApiUserRoles.sizeColumnsToFit();
       },
       rowModelType: this.pagination ? 'infinite' : null,
       cacheBlockSize: this.pagination ? this.paginationPageSize : null,
@@ -67,15 +67,13 @@ export class ContractsComponent implements OnInit {
       componentParent: this
     }
 
-    this.contractsCols = [
+    this.userRolesCols = [
       { field: 'id', hide: true },
-      { field: 'empleado.primerNombre', headerName: 'Nombre' },
-      { field: 'empleado.primerApellido', headerName: 'Apellido' },
-      { field: 'mesesContrato' },
-      { field: 'fechaInicio' },
-      { field: 'fechaFin' },
+      { field: 'name' },
+      { field: 'description' },
+      { field: 'guard_name' },
       { field: 'created_at' },
-      // { field: 'updated_at' },
+      { field: 'updated_at' },
       {
         field: "Actions",
         cellRenderer: 'renderActionButtons',
@@ -98,55 +96,64 @@ export class ContractsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pagination ? null : this.getContracts();
+    this.userRoles = this.data.roles;
+    this.roleSelectedForm = this.createRoleSelectedForm();
+    this.getRoles();
   }
 
-  getContracts() {
+  createRoleSelectedForm() {
+    return this.fb.group({
+      role: [null, Validators.required]
+    })
+  }
+
+  getRoles() {
     this.isLoading = true;
-    this.gridApiContracts !== undefined ? this.gridApiContracts.showLoadingOverlay() : null;
-    this.restangular.all('').customGET('controlEmpleados').subscribe((data) => {
-      this.gridApiContracts.hideOverlay();
+    // this.gridApiRoles !== undefined ? this.gridApiRoles.showLoadingOverlay() : null;
+    this.restangular.one('').customGET('roles').subscribe((data) => {
+      // this.gridApiRoles.hideOverlay();
       this.isLoading = false;
-      this.contracts = data.data;
+      this.roles = data.data;
     }, (err: HttpErrorResponse) => {
       this.errHandler(err);
     });
   }
 
-  getContractsPaginate() {
-    // this.dataSource = {
-    //   getRows: (params: IGetRowsParams) => {
-    //     this.isLoading = true;
-    //     this.gridApiContracts !== undefined ? this.gridApiContracts.showLoadingOverlay() : null;
-    //     const page = params.endRow / this.paginationPageSize;
-    //     this.maintainersService.getContracts(this.pagination, this.paginationPageSize, page).subscribe((data) => {
-    //       params.successCallback(data.data.data, data.data.total)
-    //       this.gridApiContracts.hideOverlay();
-    //       this.isLoading = false;
-    //     })
-    //   }
-    // }
-    // this.gridApiContracts.setDatasource(this.dataSource);
+  getUserRoles() {
+    this.isLoading = true;
+    this.gridApiUserRoles !== undefined ? this.gridApiUserRoles.showLoadingOverlay() : null;
+    this.restangular.all('roles').customGET(1).subscribe((data) => {
+      this.gridApiUserRoles.hideOverlay();
+      this.isLoading = false;
+      this.userRoles = data.data;
+    }, (err: HttpErrorResponse) => {
+      this.errHandler(err);
+    });
   }
 
-  openDialog(contract: any = null) {
-    const dialogRef = this.dialog.open(ModalAddContractComponent, {
-      data: contract,
-      disableClose: true,
-      minWidth: 'auto'
-    });
+  getUserRolesPaginate() {
 
-    dialogRef.afterClosed().subscribe(res => {
-      if (res) {
-        this.gridApiContracts.applyTransaction({
-          add: [res],
-          // addIndex: 0
-        });
+  }
+
+  save() {
+    this.isLoading = true;
+    this.roleSelectedForm.disable();
+    this.restangular.all('users').one('asignarRol', this.data.id).customPUT(this.roleSelectedForm.value.role).subscribe((res: IResponsePA) => {
+      if (res.success) {
+        this.modalAlertService.open('success', res.success.content);
+        this.userRoles = res.data.roles;
+        this.roleSelectedForm.enable();
+        this.isLoading = false;
+        
       }
-    });
+    }, (err) => {
+      this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
+      this.roleSelectedForm.enable();
+      this.isLoading = false;
+    })
   }
 
-  delete(contract: any) {
+  delete(userRole: any) {
     // Open the confirmation and save the reference
     const config: FuseConfirmationConfig = {
 
@@ -158,9 +165,10 @@ export class ContractsComponent implements OnInit {
     // Subscribe to afterClosed from the dialog reference
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.restangular.one('controlEmpleados', contract.id).remove().subscribe((res: IResponsePA) => {
+        this.restangular.all('users').one('removerRol', this.data.id).customPUT(userRole).subscribe((res: IResponsePA) => {
           if (res.success) {
             this.modalAlertService.open('success', res.success.content);
+            this.userRoles = res.data.roles;
             this.isLoading = false;
           }
         }, (err) => {
@@ -171,14 +179,14 @@ export class ContractsComponent implements OnInit {
     });
   }
 
-  onGridReadyContracts(params: GridReadyEvent) {
-    this.gridApiContracts = params.api;
-    this.gridColumnApiContracts = params.columnApi;
-    this.pagination ? this.getContractsPaginate() : null;
+  onGridReadyUserRoles(params: GridReadyEvent) {
+    this.gridApiUserRoles = params.api;
+    this.gridColumnApiUserRoles = params.columnApi;
+    // this.pagination ? this.getUserRolesPaginate() : this.getUserRoles();
   }
 
   errHandler(err: HttpErrorResponse) {
-    this.gridApiContracts.hideOverlay();
+    this.gridApiUserRoles.hideOverlay();
     this.isLoading = false;
   }
 }

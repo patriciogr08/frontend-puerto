@@ -6,6 +6,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
+import { AuthService } from 'app/core/auth/auth.service';
+import { User } from 'app/core/user/user.types';
 
 @Component({
     selector     : 'solid-layout',
@@ -16,6 +18,8 @@ export class SolidLayoutComponent implements OnInit, OnDestroy
 {
     isScreenSmall: boolean;
     navigation: Navigation;
+    public user: User;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -26,9 +30,11 @@ export class SolidLayoutComponent implements OnInit, OnDestroy
         private _router: Router,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+        private authService: AuthService
     )
     {
+        this.user = this.authService.user;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -56,7 +62,23 @@ export class SolidLayoutComponent implements OnInit, OnDestroy
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
-                this.navigation = navigation;
+                console.log(navigation)
+                if (this.user.roles.length !== 0) {
+                    this.navigation = navigation;
+                } else {
+                    this.navigation = {
+                        compact: [],
+                        default: [{
+                            id: 'forbidden',
+                            title: 'Sin Permisos',
+                            subtitle: 'No tiene permisos para acceder a las opciones del sistema',
+                            type: 'group',
+                        }],
+                        futuristic: [],
+                        horizontal: []
+                    };
+                }
+                // this.navigation = navigation;
             });
 
         // Subscribe to media changes

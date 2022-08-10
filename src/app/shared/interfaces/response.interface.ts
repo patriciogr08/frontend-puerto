@@ -19,7 +19,7 @@ export interface ISuccess {
 }
 
 export interface IResponsePA {
-    data: object,
+    data: any,
     error: object,
     success: ISuccess
 }

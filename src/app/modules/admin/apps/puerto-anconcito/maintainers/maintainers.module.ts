@@ -13,7 +13,10 @@ import { UsersComponent } from './users/users.component';
 import { ModalAddUserComponent } from './users/modals/modal-add-user/modal-add-user.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { ModalAddContractComponent } from './contracts/modals/modal-add-contract/modal-add-contract.component';
-import { RenderActionButtonsComponent } from './contracts/renders/render-action-buttons/render-action-buttons.component';
+import { ModalAddParamChildComponent } from './params/params-childs/modals/modal-add-param-child/modal-add-param-child.component';
+import { RolesComponent } from './roles/roles.component';
+import { ModalAddRoleComponent } from './roles/modals/modal-add-role/modal-add-role.component';
+import { ModalListRolesComponent } from './users/modals/modal-list-roles/modal-list-roles.component';
 
 const maintainersRoutes: Route[] = [
   {
@@ -23,6 +26,10 @@ const maintainersRoutes: Route[] = [
   {
     path: 'users',
     component: UsersComponent
+  },
+  {
+    path: 'roles',
+    component: RolesComponent
   },
   {
     path: 'contracts',
@@ -42,10 +49,13 @@ const maintainersRoutes: Route[] = [
     ContractsComponent,
     ModalAddUserComponent,
     ModalAddContractComponent,
-    RenderActionButtonsComponent,
     ParamsComponent,
     ParamsParentsComponent,
     ParamsChildsComponent,
+    ModalAddParamChildComponent,
+    RolesComponent,
+    ModalAddRoleComponent,
+    ModalListRolesComponent,
   ],
   imports: [
     ThirdPartyModule,

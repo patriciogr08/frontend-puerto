@@ -1,15 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseAlertService } from '@fuse/components/alert';
 import { FuseConfigService } from '@fuse/services/config';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridOptions, ColDef, IDatasource, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
 import { defaultColDef, gridOptions } from 'app/core/config/grid.config';
+import { RenderActionButtonsComponent } from 'app/shared/components/render-action-buttons/render-action-buttons.component';
 import { Restangular } from 'ngx-restangular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MaintainersService } from '../../maintainers.service';
 import { ModalAddUserComponent } from '../../users/modals/modal-add-user/modal-add-user.component';
+import { ModalAddParamChildComponent } from './modals/modal-add-param-child/modal-add-param-child.component';
 
 @Component({
   selector: 'admin-params-childs',
@@ -22,11 +26,15 @@ export class ParamsChildsComponent implements OnInit {
   public gridOptions: GridOptions;
   public isLoading: boolean = false;
   public searchInputControl: FormControl;
+  public context: any;
+  public parentCode: string = null;
 
   //ARRAYS
+  public paramsParents: Array<any> = [];
   public paramsChilds: Array<any> = [];
 
   //FORMS
+  public paramsParentSelectedForm: FormGroup;
 
   //GRID
   public defaultColDef: ColDef;
@@ -38,7 +46,10 @@ export class ParamsChildsComponent implements OnInit {
   public gridApiParamsChilds!: GridApi;
   public gridColumnApiParamsChilds!: ColumnApi;
 
+  public _unsubscribeAll: Subject<any> = new Subject<any>();
+
   constructor(
+    public fb: FormBuilder,
     public dialog: MatDialog,
     public maintainersService: MaintainersService,
     private fuseConfigService: FuseConfigService,
@@ -48,7 +59,7 @@ export class ParamsChildsComponent implements OnInit {
   ) {
     this.defaultColDef = defaultColDef
     this.renderComponents = {
-      // 'renderActionButtons': ActionButtonsComponent
+      'renderActionButtons': RenderActionButtonsComponent
     };
     this.gridOptions = {
       onGridSizeChanged: _onGridSizeChanged => {
@@ -58,17 +69,36 @@ export class ParamsChildsComponent implements OnInit {
       cacheBlockSize: this.pagination ? this.paginationPageSize : null,
       ...gridOptions()
     }
+    this.context = {
+      componentParent: this
+    }
 
     this.paramsChildsCols = [
       { field: 'id', hide: true },
       { field: 'nombre' },
       { field: 'codigo' },
-      { field: 'created_at' },
-      { field: 'updated_at' },
-      // {
-      //   field: "Actions",
-      //   cellRenderer: 'renderActionButtons',
-      // }
+      { field: 'valor' },
+      {
+        field: "Actions",
+        cellRenderer: 'renderActionButtons',
+        cellRendererParams: {
+          actions: [
+            {
+              id: 1,
+              name: 'edit',
+              icon: 'edit',
+              tooltip: 'Editar',
+              functionName: 'openDialogParamsChild'
+            },
+            {
+              id: 1,
+              name: 'delete',
+              icon: 'delete',
+              tooltip: 'Eliminar'
+            }
+          ]
+        }
+      },
     ];
 
     this.fuseConfigService.config$.subscribe((data) => {
@@ -77,13 +107,31 @@ export class ParamsChildsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pagination ? null : this.getParamsChilds();
+    // this.pagination ? null : this.getParamsChilds();
+    this.paramsParentSelectedForm = this.createParamsParentSelectedForm();
+    this.onSelectChange();
   }
 
-  getParamsChilds() {
+  createParamsParentSelectedForm() {
+    return this.fb.group({
+      paramsParent: []
+    })
+  }
+
+  getParamsParents() {
+    this.isLoading = true;
+    this.restangular.one('parametros').all('lista').customGET('obtenerPadres').subscribe((data) => {
+      this.isLoading = false;
+      this.paramsParents = data.data;
+    }, (err: HttpErrorResponse) => {
+      this.errHandler(err);
+    });
+  }
+
+  getParamsChilds(paramsParent: any) {
     this.isLoading = true;
     this.gridApiParamsChilds !== undefined ? this.gridApiParamsChilds.showLoadingOverlay() : null;
-    this.restangular.one('parametros').all('lista').customGET('obtenerHijos').subscribe((data) => {
+    this.restangular.one('parametros').all('obtenerLista').customGET(paramsParent.codigo).subscribe((data) => {
       this.gridApiParamsChilds.hideOverlay();
       this.isLoading = false;
       this.paramsChilds = data.data;
@@ -108,8 +156,9 @@ export class ParamsChildsComponent implements OnInit {
     // this.gridApiParamsChilds.setDatasource(this.dataSource);
   }
 
-  openDialogUser() {
-    const dialogRef = this.dialog.open(ModalAddUserComponent, {
+  openDialogParamsChild(paramsChild: any = null) {
+    const dialogRef = this.dialog.open(ModalAddParamChildComponent, {
+      data: {...paramsChild, parentCode: this.parentCode},
       minWidth: 'auto'
     });
 
@@ -123,10 +172,17 @@ export class ParamsChildsComponent implements OnInit {
     });
   }
 
+  onSelectChange() {
+    this.paramsParentSelectedForm.get('paramsParent').valueChanges.pipe((takeUntil(this._unsubscribeAll))).subscribe((data) => {
+      this.parentCode = data.codigo;
+      this.getParamsChilds(data)
+    })
+  }
+
   onGridReadyParamsChilds(params: GridReadyEvent) {
     this.gridApiParamsChilds = params.api;
     this.gridColumnApiParamsChilds = params.columnApi;
-    this.pagination ? this.getParamsChildsPaginate() : null;
+    this.pagination ? this.getParamsChildsPaginate() : this.getParamsParents();
   }
 
   errHandler(err: HttpErrorResponse) {

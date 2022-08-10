@@ -21,7 +21,7 @@
             <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading" (click)="paginate ? getContractsPaginate() : getContracts()">
                 <mat-icon>refresh</mat-icon>
             </button>
-            <button mat-flat-button [color]="'primary'" (click)="openDialogContract()">
+            <button mat-flat-button [color]="'primary'" (click)="openDialog()">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">{{ t('actions.add') }}</span>
             </button>
@@ -35,7 +35,7 @@
         <div class="flex flex-col flex-auto sm:overflow-y-auto p-2 sm:p-4">
             <ag-grid-angular style="width: auto; height: 100%;" [class]="gridTheme" [rowData]="contracts"
                 [columnDefs]="contractsCols" [defaultColDef]="defaultColDef" [gridOptions]="gridOptions"
-                [components]="renderComponents" (gridReady)="onGridReadyContracts($event)">
+                [components]="renderComponents" [context]="context" (gridReady)="onGridReadyContracts($event)">
             </ag-grid-angular>
         </div>
 
