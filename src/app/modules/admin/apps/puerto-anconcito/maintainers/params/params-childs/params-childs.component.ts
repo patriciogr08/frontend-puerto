@@ -1,13 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseAlertService } from '@fuse/components/alert';
 import { FuseConfigService } from '@fuse/services/config';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { FuseConfirmationConfig, FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridOptions, ColDef, IDatasource, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
 import { defaultColDef, gridOptions } from 'app/core/config/grid.config';
 import { RenderActionButtonsComponent } from 'app/shared/components/render-action-buttons/render-action-buttons.component';
+import { IResponsePA } from 'app/shared/interfaces/response.interface';
+import { ModalAlertService } from 'app/shared/services/modal-alert.service';
 import { Restangular } from 'ngx-restangular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +29,7 @@ export class ParamsChildsComponent implements OnInit {
   public isLoading: boolean = false;
   public searchInputControl: FormControl;
   public context: any;
-  public parentCode: string = null;
+  public paramParent: any;
 
   //ARRAYS
   public paramsParents: Array<any> = [];
@@ -54,6 +56,7 @@ export class ParamsChildsComponent implements OnInit {
     public maintainersService: MaintainersService,
     private fuseConfigService: FuseConfigService,
     public fuseAlertService: FuseAlertService,
+    public modalAlertService: ModalAlertService,
     public fuseConfirmationService: FuseConfirmationService,
     @Inject(Restangular) public restangular,
   ) {
@@ -114,7 +117,7 @@ export class ParamsChildsComponent implements OnInit {
 
   createParamsParentSelectedForm() {
     return this.fb.group({
-      paramsParent: []
+      paramsParent: [null, Validators.required]
     })
   }
 
@@ -156,25 +159,51 @@ export class ParamsChildsComponent implements OnInit {
     // this.gridApiParamsChilds.setDatasource(this.dataSource);
   }
 
-  openDialogParamsChild(paramsChild: any = null) {
+  openDialogParamsChild(paramChild: any = null) {
     const dialogRef = this.dialog.open(ModalAddParamChildComponent, {
-      data: {...paramsChild, parentCode: this.parentCode},
+      data: {
+        paramParent: this.paramParent,
+        paramChild
+      },
       minWidth: 'auto'
     });
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.gridApiParamsChilds.applyTransaction({
-          add: [res],
-          // addIndex: 0
-        });
+        this.getParamsChilds(this.paramsParentSelectedForm.get('paramsParent').value);
+      }
+    });
+  }
+
+  delete(paramChild: any) {
+    // Open the confirmation and save the reference
+    const config: FuseConfirmationConfig = {
+
+    }
+    const dialogRef = this.fuseConfirmationService.open({
+
+    });
+
+    // Subscribe to afterClosed from the dialog reference
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.restangular.one('parametros', paramChild.id).remove().subscribe((res: IResponsePA) => {
+          if (res.success) {
+            this.modalAlertService.open('success', res.success.content);
+            this.getParamsChilds(this.paramsParentSelectedForm.get('paramsParent').value);
+            this.isLoading = false;
+          }
+        }, (err) => {
+          this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
+          this.isLoading = false;
+        })
       }
     });
   }
 
   onSelectChange() {
     this.paramsParentSelectedForm.get('paramsParent').valueChanges.pipe((takeUntil(this._unsubscribeAll))).subscribe((data) => {
-      this.parentCode = data.codigo;
+      this.paramParent = data;
       this.getParamsChilds(data)
     })
   }

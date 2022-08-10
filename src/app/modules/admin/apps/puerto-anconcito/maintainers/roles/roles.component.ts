@@ -142,10 +142,11 @@ export class RolesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.gridApiRoles.applyTransaction({
-          add: [res],
-          // addIndex: 0
-        });
+        this.getRoles();
+        // this.gridApiRoles.applyTransaction({
+        //   add: [res],
+        //   // addIndex: 0
+        // });
       }
     });
   }

@@ -21,11 +21,11 @@
             <!-- Search -->
             <admin-mat-select-search classCustom="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
                 [items]="paramsParents" itemsKey="nombre" [isValueId]="false" controlName="paramsParent"></admin-mat-select-search>
-            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading"
-                (click)="paginate ? getParamsChildsPaginate() : getParamsChilds()">
+            <button class="mr-2" mat-icon-button color="primary" [disabled]="isLoading || paramsParentSelectedForm.invalid"
+                (click)="paginate ? getParamsChildsPaginate() : getParamsChilds(paramsParentSelectedForm.get('paramsParent').value)">
                 <mat-icon>refresh</mat-icon>
             </button>
-            <button mat-flat-button [color]="'primary'" (click)="openDialog()">
+            <button mat-flat-button [color]="'primary'" (click)="openDialogParamsChild()">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">{{ t('actions.add') }}</span>
             </button>

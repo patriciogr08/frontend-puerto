@@ -15,7 +15,8 @@ export class ModalAddParamChildComponent implements OnInit {
   public paramChildForm: FormGroup;
   public isLoading: boolean = false;
   public paramChildApi: any;
-  public minLengtIdentification: number = 10
+  public createParamChildApi: any;
+  public editParamChildApi: any;
 
   constructor(
     @Inject(Restangular) public restangular,
@@ -23,27 +24,33 @@ export class ModalAddParamChildComponent implements OnInit {
     public modalAlertService: ModalAlertService,
     public dialogRef: MatDialogRef<ModalAddParamChildComponent>,
     public fb: FormBuilder
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
-    this.paramChildForm = this.createForm(this.data);
-    this.paramChildApi = this.restangular[this.data === null ? 'all' : 'one']('parametros', this.data === null ? null : this.data.id); //ALL para POST y ONE para PUT
+    console.log(this.data);
+    this.paramChildForm = this.createForm(this.data.paramChild);
+    this.createParamChildApi = this.restangular.all('parametros').all('crear').all('Hijo');
+    this.editParamChildApi = this.restangular.one('parametros', this.data.paramChild.id);
+    this.paramChildApi = this.restangular[this.data.paramsChild === null ? 'all' : 'one']('parametros', this.data.paramsChild === null ? null : this.data.id); //ALL para POST y ONE para PUT
   }
 
   createForm(paramChild) {
     return this.fb.group({
       id: [paramChild ? paramChild.id : null],
+      idPadre: [this.data.paramParent ? this.data.paramParent.id : null],
       codigo: [paramChild ? paramChild.codigo : null, [Validators.required]],
       nombre: [paramChild ? paramChild.nombre : null, [Validators.required]],
-      valor: [paramChild ? paramChild.valor : null, [Validators.required]],
-      activo: [paramChild ? paramChild.activo : null, [Validators.required]],
+      descripcion: [paramChild ? paramChild.descripcion : null, [Validators.required]],
+      valor: [paramChild ? paramChild.valor : null],
+      activo: [paramChild ? paramChild.activo : null],
     })
   }
 
   save() {
     this.isLoading = true;
     this.paramChildForm.disable();
-    this.paramChildApi[this.data === null ? 'post' : 'customPUT'](this.paramChildForm.value).subscribe((res: IResponsePA) => {
+    this[this.data.paramChild === null ? 'createParamChildApi' : 'editParamChildApi'][this.data.paramChild === null ? 'post' : 'customPUT'](this.paramChildForm.value).subscribe((res: IResponsePA) => {
       if (res.success) {
         this.modalAlertService.open('success', res.success.content);
         this.dialogRef.close(res.data);

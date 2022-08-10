@@ -152,10 +152,11 @@ export class UsersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.gridApiUsers.applyTransaction({
-          add: [res],
-          // addIndex: 0
-        });
+        this.getUsers();
+        // this.gridApiUsers.applyTransaction({
+        //   add: [res],
+        //   // addIndex: 0
+        // });
       }
     });
   }
