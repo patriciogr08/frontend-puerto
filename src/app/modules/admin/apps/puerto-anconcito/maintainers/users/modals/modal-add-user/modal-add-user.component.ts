@@ -28,6 +28,7 @@ export class ModalAddUserComponent implements OnInit {
   ngOnInit(): void {
     this.userForm = this.createForm(this.data);
     this.userApi = this.restangular[this.data === null ? 'all' : 'one']('users', this.data === null ? null : this.data.id); //ALL para POST y ONE para PUT
+    this.disableControls();
   }
 
   createForm(user) {
@@ -42,6 +43,13 @@ export class ModalAddUserComponent implements OnInit {
       password: [user ? user.password : null, [Validators.required]],
       password_confirmation: [user ? user.password_confirmation : null, [Validators.required]],
     })
+  }
+
+  disableControls() {
+    if (this.data) {
+      this.userForm.get('password').disable();
+      this.userForm.get('password_confirmation').disable();
+    }
   }
 
   save() {
