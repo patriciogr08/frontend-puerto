@@ -7,7 +7,6 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
 
-
 @NgModule({
   declarations: [],
   imports: [

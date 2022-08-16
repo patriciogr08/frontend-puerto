@@ -77,10 +77,12 @@ export class UsersComponent implements OnInit {
       { field: 'usuario' },
       { field: 'email' },
       { field: 'created_at' },
-      // { field: 'updated_at' },
       {
         field: "Actions",
         cellRenderer: 'renderActionButtons',
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { textAlign: 'center' },
         cellRendererParams: {
           actions: [
             {
@@ -153,10 +155,6 @@ export class UsersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.getUsers();
-        // this.gridApiUsers.applyTransaction({
-        //   add: [res],
-        //   // addIndex: 0
-        // });
       }
     });
   }
@@ -193,11 +191,11 @@ export class UsersComponent implements OnInit {
         this.restangular.one('users', user.id).remove().subscribe((res: IResponsePA) => {
           if (res.success) {
             this.modalAlertService.open('success', res.success.content);
-            this.isLoading = false;
+            this.getUsers();
           }
         }, (err) => {
           this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
-          this.isLoading = false;
+          this.errHandler(err);
         })
       }
     });

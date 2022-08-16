@@ -8,6 +8,7 @@ import { FuseConfirmationConfig, FuseConfirmationService } from '@fuse/services/
 import { GridOptions, ColDef, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
 import { defaultColDef, gridOptions } from 'app/core/config/grid.config';
 import { RenderActionButtonsComponent } from 'app/shared/components/render-action-buttons/render-action-buttons.component';
+import { IAction } from 'app/shared/interfaces/ag-grid.interface';
 import { Restangular } from 'ngx-restangular';
 import { ReplaySubject } from 'rxjs';
 import { ManagerService } from '../manager.service';
@@ -24,6 +25,7 @@ export class UsersComponent implements OnInit {
   public gridOptions: GridOptions;
   public isLoading: boolean = false;
   public context: any;
+  public actions: Array<IAction> = [];
 
   //ARRAYS
   public users: Array<any> = [];
@@ -51,6 +53,7 @@ export class UsersComponent implements OnInit {
     this.renderComponents = {
       'renderActionButtons': RenderActionButtonsComponent
     };
+
     this.gridOptions = {
       onGridSizeChanged: _onGridSizeChanged => {
         this.gridApiUsers.sizeColumnsToFit();
@@ -59,15 +62,39 @@ export class UsersComponent implements OnInit {
       cacheBlockSize: this.pagination ? this.paginationPageSize : null,
       ...gridOptions()
     }
+
     this.context = {
       componentParent: this
     }
+
+    this.actions = [
+      {
+        id: 1,
+        name: 'edit',
+        icon: 'edit',
+        tooltip: 'Edit',
+        functionName: 'openDialogUser',
+        disableIf: {
+          param: 'state',
+          operator: '===',
+          condition: 1
+        }
+      },
+      {
+        id: 2,
+        name: 'delete',
+        icon: 'delete',
+        tooltip: 'Delete',
+        functionName: 'deleteUser'
+      }
+    ]
+
 
     this.usersCols = [
       { field: 'id', hide: true },
       {
         field: 'code',
-        width: 70,
+        width: 120,
         suppressSizeToFit: true,
       },
       { field: 'name' },
@@ -76,21 +103,11 @@ export class UsersComponent implements OnInit {
       {
         field: "Actions",
         cellRenderer: 'renderActionButtons',
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { textAlign: 'center' },
         cellRendererParams: {
-          actions: [
-            {
-              id: 1,
-              name: 'edit',
-              icon: 'edit',
-              tooltip: 'Edit'
-            },
-            {
-              id: 1,
-              name: 'delete',
-              icon: 'delete',
-              tooltip: 'Delete'
-            }
-          ]
+          actions: this.actions
         }
       }
     ];

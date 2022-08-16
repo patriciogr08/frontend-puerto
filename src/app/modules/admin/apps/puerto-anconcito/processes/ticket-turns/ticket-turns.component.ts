@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfigService } from '@fuse/services/config';
@@ -7,6 +7,8 @@ import { ColDef, GridApi, ColumnApi, GridReadyEvent } from 'ag-grid-community';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IResponsePA } from 'app/shared/interfaces/response.interface';
 import { ModalAlertService } from 'app/shared/services/modal-alert.service';
+import moment from 'moment';
+import { NgxPrinterService } from 'ngx-printer';
 import { Restangular } from 'ngx-restangular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,11 +21,16 @@ import { ModalAddClientComponent } from '../../maintainers/clients/modals/modal-
   styleUrls: ['./ticket-turns.component.scss']
 })
 export class TicketTurnsComponent implements OnInit {
+  @ViewChild('PrintTemplate')
+  private PrintTemplateTpl: TemplateRef<any>;
+
   //VARIABLES
   public gridTheme: string = 'ag-theme-alpine';
   public isLoading: boolean = false;
   public isPanelOpen: boolean = true;
   public user: any;
+  public typeVehicle: any = false;
+  public curentDate = moment();
 
   //ARRAYS
   public turnsCols: Array<ColDef> = [];
@@ -49,6 +56,7 @@ export class TicketTurnsComponent implements OnInit {
     public managerService: ManagerService,
     public modalAlertService: ModalAlertService,
     private fuseConfigService: FuseConfigService,
+    private printerService: NgxPrinterService,
     public fb: FormBuilder,
     @Inject(Restangular) public restangular,
   ) {
@@ -127,8 +135,6 @@ export class TicketTurnsComponent implements OnInit {
 
   getTypeVehicles() {
     this.restangular.one('parametros').one('obtenerLista').customGET('PAR-TIPO-VEH').subscribe((data) => {
-      // this.gridApiTurns.hideOverlay();
-      // this.isLoading = false;
       this.typeVehicles = data.data;
     });
   }
@@ -146,6 +152,7 @@ export class TicketTurnsComponent implements OnInit {
     this.turnForm.get('idTipoVehiculo').valueChanges.pipe(takeUntil(this._unsubscribeAll)).subscribe((data) => {
       for (const typeVehicle of this.typeVehicles) {
         if (typeVehicle.id === data) {
+          this.typeVehicle = typeVehicle;
           this.turnForm.get('valor').patchValue(typeVehicle.valor);
         }
       }
@@ -159,10 +166,15 @@ export class TicketTurnsComponent implements OnInit {
     })
   }
 
+  printTicket() {
+    this.printerService.printAngular(this.PrintTemplateTpl);
+  }
+
   save() {
     this.restangular.all('cobroGarita').post(this.turnForm.value).subscribe((res: IResponsePA) => {
       if (res.success) {
         this.modalAlertService.open('success', res.success.content)
+        this.printTicket();
         this.clientSelectedForm.reset();
         this.clientForm.reset();
         this.turnForm.reset();

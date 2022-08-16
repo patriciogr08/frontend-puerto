@@ -15,6 +15,7 @@ import { appRoutes } from 'app/app.routing';
 import { RestangularModule } from 'ngx-restangular';
 import { RestangularConfigFactory } from './core/config/restangular.config';
 import { AuthService } from './core/auth/auth.service';
+import { NgxPrinterModule } from 'ngx-printer'
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -44,6 +45,7 @@ const routerConfig: ExtraOptions = {
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
         RestangularModule.forRoot([AuthService], RestangularConfigFactory, ),
+        NgxPrinterModule.forRoot({printOpenWindow: false, printPreviewOnly: false})
     ],
     bootstrap   : [
         AppComponent

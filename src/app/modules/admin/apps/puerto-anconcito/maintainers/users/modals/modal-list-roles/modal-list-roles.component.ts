@@ -109,9 +109,7 @@ export class ModalListRolesComponent implements OnInit {
 
   getRoles() {
     this.isLoading = true;
-    // this.gridApiRoles !== undefined ? this.gridApiRoles.showLoadingOverlay() : null;
     this.restangular.one('').customGET('roles').subscribe((data) => {
-      // this.gridApiRoles.hideOverlay();
       this.isLoading = false;
       this.roles = data.data;
     }, (err: HttpErrorResponse) => {
@@ -119,6 +117,9 @@ export class ModalListRolesComponent implements OnInit {
     });
   }
 
+  /**
+   * Se necesita api para traer roles por usuario
+   */
   getUserRoles() {
     this.isLoading = true;
     this.gridApiUserRoles !== undefined ? this.gridApiUserRoles.showLoadingOverlay() : null;
@@ -182,7 +183,6 @@ export class ModalListRolesComponent implements OnInit {
   onGridReadyUserRoles(params: GridReadyEvent) {
     this.gridApiUserRoles = params.api;
     this.gridColumnApiUserRoles = params.columnApi;
-    // this.pagination ? this.getUserRolesPaginate() : this.getUserRoles();
   }
 
   errHandler(err: HttpErrorResponse) {

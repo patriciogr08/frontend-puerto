@@ -4,9 +4,13 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseAlertService } from '@fuse/components/alert';
 import { FuseConfigService } from '@fuse/services/config';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { FuseConfirmationConfig, FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridOptions, ColDef, GridApi, ColumnApi, GridReadyEvent, IGetRowsParams, IDatasource } from 'ag-grid-community';
 import { defaultColDef, gridOptions } from 'app/core/config/grid.config';
+import { RenderActionButtonsComponent } from 'app/shared/components/render-action-buttons/render-action-buttons.component';
+import { IAction } from 'app/shared/interfaces/ag-grid.interface';
+import { IResponsePA } from 'app/shared/interfaces/response.interface';
+import { ModalAlertService } from 'app/shared/services/modal-alert.service';
 import { Restangular } from 'ngx-restangular';
 import { ReplaySubject } from 'rxjs';
 import { MaintainersService } from '../maintainers.service';
@@ -22,20 +26,20 @@ export class ClientsComponent implements OnInit {
   public gridTheme: string = 'ag-theme-alpine';
   public gridOptions: GridOptions;
   public isLoading: boolean = false;
-  public searchInputControl: FormControl;
+  public actions: Array<IAction> = [];
+  public context: any;
 
+  //ARRAYS
+  public clients: Array<any> = [];
+
+  //FORMS
+
+  //GRID
   public pagination: boolean = false;
   public paginationPageSize: number = 1;
   public dataSource: IDatasource;
-
   public defaultColDef: ColDef;
   public renderComponents: any;
-
-  public clients: Array<any> = [];
-  public clientCtrl: FormControl = new FormControl();
-  public clientFilterCtrl: FormControl = new FormControl();
-  public filteredClients: ReplaySubject<Array<any>> = new ReplaySubject<Array<any>>(1);
-
   public clientsCols: Array<ColDef> = []
   public gridApiClients!: GridApi;
   public gridColumnApiClients!: ColumnApi;
@@ -45,12 +49,13 @@ export class ClientsComponent implements OnInit {
     public maintainersService: MaintainersService,
     private fuseConfigService: FuseConfigService,
     public fuseAlertService: FuseAlertService,
+    public modalAlertService: ModalAlertService,
     public fuseConfirmationService: FuseConfirmationService,
     @Inject(Restangular) public restangular,
   ) {
     this.defaultColDef = defaultColDef
     this.renderComponents = {
-      // 'renderActionButtons': ActionButtonsComponent
+      'renderActionButtons': RenderActionButtonsComponent
     };
     this.gridOptions = {
       onGridSizeChanged: _onGridSizeChanged => {
@@ -61,6 +66,32 @@ export class ClientsComponent implements OnInit {
       ...gridOptions()
     }
 
+    this.context = {
+      componentParent: this
+    }
+
+    this.actions = [
+      {
+        id: 1,
+        name: 'edit',
+        icon: 'edit',
+        tooltip: 'Editar',
+        functionName: 'openDialogClient',
+        // disableIf: {
+        //   param: 'state',
+        //   operator: '===',
+        //   condition: 1
+        // }
+      },
+      {
+        id: 2,
+        name: 'delete',
+        icon: 'delete',
+        tooltip: 'Eliminar',
+        functionName: 'deleteClient'
+      }
+    ]
+
     this.clientsCols = [
       { field: 'id', hide: true },
       { field: 'nombres' },
@@ -68,10 +99,16 @@ export class ClientsComponent implements OnInit {
       { field: 'identificacion' },
       { field: 'created_at' },
       { field: 'updated_at' },
-      // {
-      //   field: "Actions",
-      //   cellRenderer: 'renderActionButtons',
-      // }
+      {
+        field: "Actions",
+        cellRenderer: 'renderActionButtons',
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { textAlign: 'center' },
+        cellRendererParams: {
+          actions: this.actions
+        }
+      }
     ];
 
     this.fuseConfigService.config$.subscribe((data) => {
@@ -111,15 +148,39 @@ export class ClientsComponent implements OnInit {
     this.gridApiClients.setDatasource(this.dataSource);
   }
 
-  openDialogClient() {
-    const dialogRef = this.dialog.open(ModalAddClientComponent);
+  openDialogClient(client: any = null) {
+    const dialogRef = this.dialog.open(ModalAddClientComponent, {
+      data: client
+    });
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.gridApiClients.applyTransaction({
-          add: [res],
-          // addIndex: 0
-        });
+        this.getClients();
+      }
+    });
+  }
+
+  deleteClient(client: any) {
+    // Open the confirmation and save the reference
+    const config: FuseConfirmationConfig = {
+
+    }
+    const dialogRef = this.fuseConfirmationService.open({
+
+    });
+
+    // Subscribe to afterClosed from the dialog reference
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.restangular.one('clientes', client.id).remove().subscribe((res: IResponsePA) => {
+          if (res.success) {
+            this.modalAlertService.open('success', res.success.content);
+            this.getClients();
+          }
+        }, (err) => {
+          this.modalAlertService.open('error', err.error.error.content.error ? err.error.error.content.error[0] : err.error.error.content.password[0]);
+          this.errHandler(err);
+        })
       }
     });
   }

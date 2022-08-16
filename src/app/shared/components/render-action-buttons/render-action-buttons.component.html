@@ -1,5 +1,5 @@
 <ng-container>
-    <button *ngFor="let item of params.actions" mat-icon-button (click)="actions(item)">
+    <button *ngFor="let item of params.actions" mat-icon-button [disabled]="disabledIf(item)" (click)="actions(item)">
         <mat-icon matTooltip={{item.tooltip}}>{{item.icon}}</mat-icon>
     </button>
 </ng-container>

@@ -15,7 +15,6 @@ export class RenderActionButtonsComponent implements OnInit {
   public isLoading: boolean = false;
 
   constructor(
-    private fuseConfirmationService: FuseConfirmationService,
   ) { }
 
   ngOnInit(): void {
@@ -29,20 +28,20 @@ export class RenderActionButtonsComponent implements OnInit {
 
   actions(action: IAction) {
     this.componentParent[action.functionName !== undefined ? action.functionName : action.name](this.params.data);
-    // switch (action.name) {
-    //   case 'edit':
-    //     this.componentParent.openDialog(this.params.data);
-    //     break;
-    //   case 'delete':
-    //     this.componentParent.delete(this.params.data);
-    //     break;
-    //   case action.name:
-    //     this.componentParent[action.functionName](this.params.data);
-    //     break;
-
-    //   default:
-    //     break;
-    // }
   }
 
+  disabledIf(action: IAction) {
+    if (action.disableIf) {
+      switch (action.disableIf.operator) {
+        case '>': return this.params.data[action.disableIf.param] > action.disableIf.condition;
+        case '<': return this.params.data[action.disableIf.param] < action.disableIf.condition;
+        case '>=': return this.params.data[action.disableIf.param] >= action.disableIf.condition;
+        case '<=': return this.params.data[action.disableIf.param] <= action.disableIf.condition;
+        case '==': return this.params.data[action.disableIf.param] == action.disableIf.condition;
+        case '!=': return this.params.data[action.disableIf.param] != action.disableIf.condition;
+        case '===': return this.params.data[action.disableIf.param] === action.disableIf.condition;
+        case '!==': return this.params.data[action.disableIf.param] !== action.disableIf.condition;
+      }
+    }
+  }
 }
