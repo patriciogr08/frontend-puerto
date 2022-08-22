@@ -39,7 +39,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatCardModule,
     MatCheckboxModule,
     MatMomentDateModule,
-    MatTabsModule
+    MatTabsModule,
   ]
 })
 export class MaterialModule { }

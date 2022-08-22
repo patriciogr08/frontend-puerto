@@ -128,6 +128,21 @@ export const defaultNavigation: FuseNavigationItem[] = [
                     },
                 ]
             },
+            {
+                id: 'reports',
+                title: 'Reportes',
+                type: 'collapsable',
+                icon: 'heroicons_outline:chart-pie',
+                children: [
+                    {
+                        id: 'charges',
+                        title: 'Cobros Garita',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/reports/charges',
+                    }
+                ]
+            },
             // {
             //     id: 'components',
             //     title: 'Components',
