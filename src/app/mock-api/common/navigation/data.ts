@@ -140,6 +140,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
                         link: '/puerto-anconcito/reports/charges',
+                    },
+                    {
+                        id: 'record-charges',
+                        title: 'Historial Cobros',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/puerto-anconcito/reports/record-charges',
                     }
                 ]
             },

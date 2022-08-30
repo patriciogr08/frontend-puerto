@@ -173,7 +173,24 @@ export class ChargesComponent implements OnInit {
     }
     let dd = {
       content: [
-        { text: 'Cobros', style: 'title' },
+        {
+          style: 'header',
+          table: {
+            widths: ['*'],
+            body: [
+              [{ text: 'Secretaría Tecnica de Gestión Inmobilibaria del Sector Público', style: 'tableHeader', alignment: 'center' }],
+              [{ text: 'Puerto Persquero Anconcito', style: 'tableHeader', alignment: 'center' }],
+              [{ text: 'Cobros', style: 'tableHeader', alignment: 'center' }]
+            ]
+          }
+        },
+        {
+          alignment: 'center',
+          columns: [
+            { text: 'Fecha Inicio: ' + this.dateRangeForm.get('fechaInicio').value.format("DD/MM/YYYY"), },
+            { text: 'Fecha Fin: ' + this.dateRangeForm.get('fechaFin').value.format("DD/MM/YYYY"), },
+          ]
+        },
         {
           style: 'horizontalTable',
           table: {
@@ -191,6 +208,9 @@ export class ChargesComponent implements OnInit {
         },
         horizontalTable: {
           margin: [0, 5, 0, 10]
+        },
+        header: {
+          margin: [0, 0, 0, 20]
         },
         tableHeader: {
           bold: true,

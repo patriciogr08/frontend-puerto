@@ -5,17 +5,23 @@ import { Route, RouterModule } from '@angular/router';
 import { MaterialModule } from 'app/shared/material.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { ThirdPartyModule } from 'app/shared/third-party.module';
+import { RecordChargesComponent } from './record-charges/record-charges.component';
 
 const reportsRoutes: Route[] = [
   {
     path: 'charges',
     component: ChargesComponent
+  },
+  {
+    path: 'record-charges',
+    component: RecordChargesComponent
   }
 ];
 
 @NgModule({
   declarations: [
-    ChargesComponent
+    ChargesComponent,
+    RecordChargesComponent
   ],
   imports: [
     CommonModule,

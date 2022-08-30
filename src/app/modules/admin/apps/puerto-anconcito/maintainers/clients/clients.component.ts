@@ -96,7 +96,7 @@ export class ClientsComponent implements OnInit {
       { field: 'id', hide: true },
       { field: 'nombres' },
       { field: 'apellidos' },
-      { field: 'identificacion' },
+      { field: 'identificacion', headerName: 'Identificación' },
       { field: 'created_at' },
       { field: 'updated_at' },
       {

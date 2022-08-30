@@ -62,7 +62,7 @@ export class ParamsParentsComponent implements OnInit {
     this.paramsParentsCols = [
       { field: 'id', hide: true },
       { field: 'nombre' },
-      { field: 'codigo' },
+      { field: 'codigo', headerName: 'Código'},
       { field: 'created_at' },
       { field: 'updated_at' },
       // {

@@ -5,7 +5,7 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // import { FileSaverModule } from 'ngx-filesaver';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-
+import { NgApexchartsModule } from "ng-apexcharts";
 
 @NgModule({
   declarations: [],
@@ -17,7 +17,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     TranslocoModule,
     NgxMatSelectSearchModule,
     // FileSaverModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    NgApexchartsModule
   ]
 })
 export class ThirdPartyModule { }

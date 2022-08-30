@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
     this.usersCols = [
       { field: 'id', hide: true },
       { field: 'primerNombre' },
-      { field: 'segundoNombre' },
+      // { field: 'segundoNombre' },
       { field: 'primerApellido' },
       { field: 'segundoApellido' },
       { field: 'usuario' },
