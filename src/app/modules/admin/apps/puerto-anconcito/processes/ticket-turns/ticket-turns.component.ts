@@ -31,6 +31,7 @@ export class TicketTurnsComponent implements OnInit {
   public user: any;
   public typeVehicle: any = false;
   public curentDate = moment();
+  public ticketNumber: string = '';
 
   //ARRAYS
   public turnsCols: Array<ColDef> = [];
@@ -174,6 +175,7 @@ export class TicketTurnsComponent implements OnInit {
     this.restangular.all('cobroGarita').post(this.turnForm.value).subscribe((res: IResponsePA) => {
       if (res.success) {
         this.modalAlertService.open('success', res.success.content)
+        this.ticketNumber = res.data.ticket;
         this.printTicket();
         this.clientSelectedForm.reset();
         this.clientForm.reset();
