@@ -1,4 +1,4 @@
-const protocol = 'http://'
+const protocol = 'https://'
 const domain = '3.225.91.242';
 const port = '';
 const sufix = '/back-puerto-anconcito/public/api';
